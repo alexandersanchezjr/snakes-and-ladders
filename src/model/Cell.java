@@ -11,10 +11,15 @@ public class Cell {
 	private Cell up;	
 	private Cell down;
 	
-	public Cell (int number, char snake, int ladder) {
+//	public Cell (int number, char snake, int ladder, Player player) {
+//		this.number = number;
+//		this.snake = snake;
+//		this.ladder = ladder;
+//		this.player = player;
+//	}
+	
+	public Cell (int number) {
 		this.number = number;
-		this.snake = snake;
-		this.ladder = ladder;
 	}
 	/**
 	 * @return the number
@@ -23,12 +28,18 @@ public class Cell {
 		return number;
 	}
 
-
-	
-//	public char getNameCol() {
-//		return (char)('A'+column);
-//	}
-
+	/**
+	 * @param snake the snake to set
+	 */
+	public void setSnake(char snake) {
+		this.snake = snake;
+	}
+	/**
+	 * @param ladder the ladder to set
+	 */
+	public void setLadder(int ladder) {
+		this.ladder = ladder;
+	}
 	/**
 	 * @param player the player to set
 	 */
