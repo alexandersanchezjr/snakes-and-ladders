@@ -4,6 +4,7 @@ public class Player {
 	
 	private char symbol;
 	private int cont;
+	private double score;
 	private Player right;
 	
 	
@@ -14,6 +15,7 @@ public class Player {
 	public Player(char symbol) {
 		this.setSymbol(symbol);
 		cont = 0;
+		setScore(0);
 	}
 
 	/**
@@ -37,6 +39,20 @@ public class Player {
 		return cont;
 	}
 	
+	/**
+	 * @return the score
+	 */
+	public double getScore() {
+		return score;
+	}
+
+	/**
+	 * @param score the score to set
+	 */
+	public void setScore(int size) {
+		score = cont*size;
+	}
+
 	/**
 	 * @return the right
 	 */
