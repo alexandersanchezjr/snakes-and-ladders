@@ -40,6 +40,13 @@ public class Cell {
 	public void setLadder(int ladder) {
 		this.ladder = ladder;
 	}
+	
+	public boolean hasSnakeOrLadder() {
+		if (snake == 0 && ladder == 0)
+			return false;
+		else 
+			return true;
+	}
 	/**
 	 * @param player the player to set
 	 */
