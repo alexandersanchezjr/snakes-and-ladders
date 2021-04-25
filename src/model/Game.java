@@ -18,36 +18,64 @@ public class Game {
 	}
 
 	private void createGame() {
-		first = new Cell ()
+		first = new Cell (1);
+		createRow(1,1,first);
 	}
 	
-//	private void createRow(int i, int j, Node currentFirstRow) {
-//		System.out.println("en createRow con la fila "+i);
-//		createCol(i,j+1,currentFirstRow,currentFirstRow.getUp());
-//		if(i+1<numRows) {
-//			Node downFirstRow = new Node(i+1,j);
-//			downFirstRow.setUp(currentFirstRow);
-//			currentFirstRow.setDown(downFirstRow);
-//			createRow(i+1,j,downFirstRow);
-//		}
-//	}
+	private void createRow(int i, int j, Cell currentFirstRow) {
+		
+		if (i % 2 != 0) {
+			createColumn(i,j++,currentFirstRow,currentFirstRow.getDown());
+			if(i+1 < rows) {
+				Cell upFirstRow = new Cell((i + 1) * j);
+				upFirstRow.setDown(currentFirstRow);
+				currentFirstRow.setUp(upFirstRow);
+				createRow(i+1,j,upFirstRow);
+			}
+		}else {
+			createColumn(i,j--,currentFirstRow,currentFirstRow.getDown());
+			if(i+1 < rows) {
+				Cell downFirstRow = new Cell((i + 1) * j);
+				downFirstRow.setUp(currentFirstRow);
+				currentFirstRow.setDown(downFirstRow);
+				createRow(i++,j * columns,downFirstRow);
+			}
+		}
+			
+	}
 
-//	private void createCol(int i, int j, Node prev, Node rowPrev) {
-//		if(j<numCols) {
-//			System.out.println("   en createCol con la columna "+j);
-//			Node current = new Node(i, j);
-//			current.setPrev(prev);
-//			prev.setNext(current);
-//			
-//			if(rowPrev!=null) {
-//				rowPrev = rowPrev.getNext();
-//				current.setUp(rowPrev);
-//				rowPrev.setDown(current);
-//			}
-//			
-//			createCol(i,j+1,current,rowPrev);
-//		}
-//	}
+	private void createColumn(int i, int j, Cell previous, Cell previuousRow) {
+		if (i % 2 != 0) {
+			if(j < columns) {
+				Cell current = new Cell (i * j);
+				current.setLeft(previous);
+				previous.setRight(current);
+				
+				if(previuousRow!=null) {
+					previuousRow = previuousRow.getRight();
+					current.setUp(previuousRow);
+					previuousRow.setDown(current);
+				}
+				
+				createColumn(i,j++,current,previuousRow);
+			}
+		}else {
+			if(j < columns) {
+				Cell current = new Cell (i * j);
+				current.setLeft(previous);
+				previous.setRight(current);
+				
+				if(previuousRow!=null) {
+					previuousRow = previuousRow.getRight();
+					current.setUp(previuousRow);
+					previuousRow.setDown(current);
+				}
+				
+				createColumn(i,j--,current,previuousRow);
+			}
+		}
+
+	}
 //	
 //	public String toString() {
 //		String msg;

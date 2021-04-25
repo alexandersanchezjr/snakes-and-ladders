@@ -63,7 +63,7 @@ public class Cell {
 		return down;
 	}
 
-	public void setPrev(Cell left) {
+	public void setLeft(Cell left) {
 		this.left = left;
 	}
 
