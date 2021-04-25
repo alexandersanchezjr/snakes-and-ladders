@@ -1,9 +1,14 @@
 package model;
 
+import java.util.Random;
+
 public class Game {
 	private Cell first;
 	private int columns;
 	private int rows;
+	
+	Random random = new Random();
+
 	
 	public Game (int columns, int rows, int snakes, int ladders, int players) {
 		this.columns = columns;
@@ -20,8 +25,11 @@ public class Game {
 	private void createGame() {
 		first = new Cell (1);
 		createRow(1,1,first);
+		includeSnakes(snakes);
+		includeLadders(ladders);
 	}
 	
+
 	private void createRow(int i, int j, Cell currentFirstRow) {
 		
 		if (i % 2 != 0) {
@@ -30,7 +38,7 @@ public class Game {
 				Cell upFirstRow = new Cell((i + 1) * j);
 				upFirstRow.setDown(currentFirstRow);
 				currentFirstRow.setUp(upFirstRow);
-				createRow(i+1,j,upFirstRow);
+				createRow(i++,j,upFirstRow);
 			}
 		}else {
 			createColumn(i,j--,currentFirstRow,currentFirstRow.getDown());
@@ -76,7 +84,50 @@ public class Game {
 		}
 
 	}
-//	
+	
+	private void includeSnakes(int snakes) {
+		if (snakes == 1) {
+			int numberToSearch = random.ints(1, ((rows * columns)+1)).findFirst().getAsInt();
+			Cell cell = searchCell(numberToSearch);
+			if (!cell.hasSnakeOrLadder()) {
+				
+			}else
+				includeSnakes(snakes);
+		}
+			
+	}
+	
+	private Cell searchCell (int cellNumber) {		
+		return searchCellInRow(1, 1, cellNumber, first);
+	}
+
+	private Cell searchCellInRow (int i, int j, int cellNumber, Cell currentFirstRow) {
+		Cell cell = null;
+		if (currentFirstRow.getNumber() == cellNumber)
+			cell = currentFirstRow;
+		else {
+			cell = searchCellInColumn(i, j++, cellNumber, currentFirstRow.getRight());
+			if(i++ < rows && cell == null) {				
+				cell = searchCellInRow(i++, j, cellNumber, currentFirstRow.getUp());
+			}
+		}
+		
+		return cell;
+	}
+
+	private Cell searchCellInColumn(int i, int j, int cellNumber, Cell currentColumn) {
+		Cell cell = null;
+		if (currentColumn != null) {
+			if (currentColumn.getNumber() == cellNumber)
+				cell = currentColumn;
+			else if(j < columns && currentColumn.getRight() !=null) {
+				cell = searchCellInColumn(i, j++, cellNumber, currentColumn.getRight());
+			}
+		}
+		return cell;
+		
+	}
+	
 //	public String toString() {
 //		String msg;
 //		msg = toStringRow(first);
