@@ -80,11 +80,11 @@ public class Cell {
 	
 	public String gameToString () {
 		if (snake != 0) 
-			return "[" + snake + player.getSymbol() + "]";
+			return "[" + snake + player.toString(player) + "]";
 		else if (ladder != 0)
-			return "[" + ladder + player.getSymbol() + "]";
+			return "[" + ladder + player.toString(player) + "]";
 		else if (player != null)
-			return "[" + player.getSymbol() + "]";
+			return "[" + player.toString(player) + "]";
 		else
 			return "[\t]";
 	}
