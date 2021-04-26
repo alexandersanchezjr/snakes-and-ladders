@@ -3,9 +3,23 @@ package model;
 import java.util.Random;
 
 public class Game {
+	
+	private final static char ASTERISK = '*';
+	private final static char EXCLAMATION = '!';
+	private final static char UPPER_CASE_O = 'O';
+	private final static char UPPER_CASE_X = 'X';
+	private final static char PERCENTAGE = '%';
+	private final static char DOLLAR = '$';
+	private final static char HASH = '#';
+	private final static char PLUS = '+';
+	private final static char AMPERSAND = '&';
+	
 	private Cell first;
 	private int columns;
 	private int rows;
+	private Player players;
+	
+	private RankingTree rt;
 	
 	Random random = new Random();
 
@@ -13,12 +27,15 @@ public class Game {
 	public Game (int columns, int rows, int snakes, int ladders, int players) {
 		this.columns = columns;
 		this.rows = rows;
+		rt = new RankingTree();
 		createGame(snakes, ladders);
+		assignRandomSymbols(players);
 	}
 	
 	public Game (int columns, int rows, int snakes, int ladders, String players) {
 		this.columns = columns;
 		this.rows = rows;
+		rt = new RankingTree();
 		createGame(snakes, ladders);
 	}
 
@@ -27,6 +44,54 @@ public class Game {
 		createRow(1,1,first);
 		includeSnakes(snakes);
 		includeLadders(ladders);
+	}
+	
+	private void addPlayer(char c) {
+		
+	}
+	
+	private void assignRandomSymbols(int players) {
+		if(players != 0) {
+			char symbol = generateRandomSymbol();
+			addPlayer(symbol);
+			assignRandomSymbols(players--);
+			//TODO Hacer la verificación de que no escoga el mismo simbolo
+		}
+	}
+	
+	private char generateRandomSymbol() {
+		char symbol = 0;
+		int symbolNumber = random.ints(1, 9).findFirst().getAsInt();
+		switch(symbolNumber) {
+		case 1:
+			symbol = ASTERISK;
+			break;
+		case 2:
+			symbol = EXCLAMATION;
+			break;
+		case 3:
+			symbol = UPPER_CASE_O;
+			break;
+		case 4:
+			symbol = UPPER_CASE_X;
+			break;
+		case 5:
+			symbol = PERCENTAGE;
+			break;
+		case 6:
+			symbol = DOLLAR;
+			break;
+		case 7:
+			symbol = HASH;
+			break;
+		case 8:
+			symbol = PLUS;
+			break;
+		case 9:
+			symbol = AMPERSAND;
+			break;
+		}
+		return symbol;
 	}
 	
 
@@ -232,6 +297,10 @@ public class Game {
 		}
 		return cell;
 		
+	}
+	
+	public String showRankingTree() {
+		return rt.toString();
 	}
 	
 //	public String toString() {
