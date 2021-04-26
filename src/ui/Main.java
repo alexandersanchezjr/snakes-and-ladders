@@ -3,25 +3,29 @@
  */
 package ui;
 
+import java.io.IOException;
+
 /**
  * @author ALEX JR
  * @author Santiago Arevalo
  */
 public class Main {
 
-	/**
-	 * 
-	 */
-	public Main() {
-		// TODO Auto-generated constructor stub
-	}
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		Menu menu = new Menu ();
+		try {
+			menu.startProgram();
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
