@@ -150,7 +150,7 @@ public class Game {
 			
 	}
 
-	private void createColumn(int i, int j, Cell previous, Cell previuousRow) {
+	private void createColumn(int i, int j, Cell previous, Cell previuousRow) {	//TODO This method is not working well idk why
 		if (i % 2 != 0) {
 			if(j < columns) {
 				Cell current = new Cell (i * j);
