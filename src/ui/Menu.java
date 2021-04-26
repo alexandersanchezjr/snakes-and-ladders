@@ -50,7 +50,7 @@ public class Menu {
 	}
 	
 	public void showRankingBoard() {
-		
+		System.out.println(game.showRankingTree());
 	}
 	
 	public void doOperation(int choice) {
@@ -71,6 +71,35 @@ public class Menu {
 				break;
 			default:
 				System.out.println("Opcion invalida, repita nuevamente");
+		}
+	}
+	
+	public void startProgram() throws NumberFormatException, IOException  {
+		System.out.println("¡Bienvenido a Serpientes y Escaleras!");
+		showMenu();
+		int option = readOption();
+		doOperation(option);
+		startProgram(option);
+//		do {
+//			showMenu();
+//			option = readOption();
+//			doOperation(option);
+//		} while(option != EXIT);
+	}
+	
+	private void startProgram(int option) {
+		if(option != EXIT) {
+			showMenu();
+			try {
+				option = readOption();
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+				System.out.println("Deje la bobada e imprima un numero, vuelva a primaria");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			doOperation(option);
+			startProgram(option);
 		}
 	}
 }
