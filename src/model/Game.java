@@ -86,7 +86,8 @@ public class Game {
 	}
 	
 	private void includeLadders(int ladders) {
-		if (ladders == 1) {
+		if (ladders > 0) {
+			includeSnakes(ladders--);
 			int firstNumberToSearch = random.ints(1, ((rows * columns)+1)).findFirst().getAsInt();
 			Cell firstCell = searchCell(firstNumberToSearch);
 			if (!firstCell.hasSnakeOrLadder() && !rowHasLadder(firstCell.getLeft(), firstCell.getRight())) {
@@ -99,8 +100,6 @@ public class Game {
 			}else {
 				includeSnakes(ladders);
 			}
-		}else {
-			includeSnakes(ladders--);
 		}
 	}
 	
@@ -145,7 +144,8 @@ public class Game {
 	}
 	
 	private void includeSnakes(int snakes) {
-		if (snakes == 1) {
+		if (snakes > 0) {
+			includeSnakes(snakes--);
 			int firstNumberToSearch = random.ints(1, ((rows * columns)+1)).findFirst().getAsInt();
 			Cell firstCell = searchCell(firstNumberToSearch);
 			if (!firstCell.hasSnakeOrLadder() && !rowHasSnake(firstCell.getLeft(), firstCell.getRight())) {
@@ -158,8 +158,6 @@ public class Game {
 			}else {
 				includeSnakes(snakes);
 			}
-		}else {
-			includeSnakes(snakes--);
 		}
 	}
 	
