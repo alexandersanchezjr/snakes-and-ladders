@@ -25,7 +25,7 @@ public class RankingTree {
 		this.root = root;
 	}
 	
-	public void addWinner(String nickname, double score, int columns, int rows, int snakes, int ladders, int players, String symbols) {
+	public void addWinner(String nickname, int score, int columns, int rows, int snakes, int ladders, int players, String symbols) {
 		Winner w = new Winner(nickname, score, columns, rows, snakes, ladders, players, symbols);
 		if(root == null) {
 			root = w;
@@ -36,20 +36,20 @@ public class RankingTree {
 
 	private void addWinner(Winner current, Winner newWinner) {
 		if(newWinner.getScore() <= current.getScore()) {
+			if(current.getRight() != null) {
+				addWinner(current.getRight(), newWinner);
+			}
+			else {
+				current.setRight(newWinner);
+				newWinner.setParent(current);
+			}
+		} 
+		else {
 			if(current.getLeft() != null) {
 				addWinner(current.getLeft(), newWinner);
 			}
 			else {
 				current.setLeft(newWinner);
-				newWinner.setParent(current);
-			}
-		} 
-		else {
-			if(current.getRigth() != null) {
-				addWinner(current.getRigth(), newWinner);
-			}
-			else {
-				current.setRigth(newWinner);
 				newWinner.setParent(current);
 			}
 		}
@@ -61,7 +61,7 @@ public class RankingTree {
 			msg = "No hay jugadores ganadores aún";
 		}
 		else {
-			msg = root.toString();
+			msg = root.toString(root);
 		}
 		return msg;
 	}

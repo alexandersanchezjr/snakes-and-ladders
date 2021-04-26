@@ -3,7 +3,7 @@ package model;
 public class Winner {
 	
 	private String nickname;
-	private double score;
+	private int score;
 	private int columns;
 	private int rows;
 	private int snakes;
@@ -13,7 +13,7 @@ public class Winner {
 	
 	private Winner parent;
 	private Winner left;
-	private Winner rigth;
+	private Winner right;
 	
 	/**
 	 * @param nickname
@@ -25,7 +25,7 @@ public class Winner {
 	 * @param players
 	 * @param symbols
 	 */
-	public Winner(String nickname, double score, int columns, int rows, int snakes, int ladders, int players, String symbols) {
+	public Winner(String nickname, int score, int columns, int rows, int snakes, int ladders, int players, String symbols) {
 		this.nickname = nickname;
 		this.score = score;
 		this.columns = columns;
@@ -36,7 +36,7 @@ public class Winner {
 		this.symbols = symbols;
 		parent = null;
 		left = null;
-		rigth = null;
+		right = null;
 	}
 	/**
 	 * @return the nickname
@@ -53,13 +53,13 @@ public class Winner {
 	/**
 	 * @return the score
 	 */
-	public double getScore() {
+	public int getScore() {
 		return score;
 	}
 	/**
 	 * @param score the score to set
 	 */
-	public void setScore(double score) {
+	public void setScore(int score) {
 		this.score = score;
 	}
 	/**
@@ -159,21 +159,35 @@ public class Winner {
 		this.left = left;
 	}
 	/**
-	 * @return the rigth
+	 * @return the right
 	 */
-	public Winner getRigth() {
-		return rigth;
+	public Winner getRight() {
+		return right;
 	}
 	/**
-	 * @param rigth the rigth to set
+	 * @param rigth the right to set
 	 */
-	public void setRigth(Winner rigth) {
-		this.rigth = rigth;
+	public void setRight(Winner right) {
+		this.right = right;
 	}
 	
-	public String toString() {
+	public String toString(Winner w) {
 		String msg = "";
-		
-		return msg;
+		if (w != null) {
+		    /* first recur on left child */
+		    msg += toString(w.left);
+		    /* then print the data of node */
+		    msg += "Nombre: " + nickname + 
+		    		"\nPuntaje: " +  score + 
+		    		"\nDimensión tablero: " + columns + "x" + rows + 
+		    		"\nSerpientes: " + snakes + 
+		    		"\nEscaleras" + ladders + 
+		    		"\nNumero de jugadores: " + players + 
+		    		"\nSimbolos de jugadores: " + symbols + "\n\n";
+		    msg += "=================================================\n\n";
+		    /* now recur on right child */
+		    msg += toString(w.right);
+	    }
+	    return msg;
 	}
 }
