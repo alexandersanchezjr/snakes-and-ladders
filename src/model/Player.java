@@ -4,7 +4,7 @@ public class Player {
 	
 	private char symbol;
 	private int cont;
-	private double score;
+	private int score;
 	private Player right;
 	
 	
@@ -42,7 +42,7 @@ public class Player {
 	/**
 	 * @return the score
 	 */
-	public double getScore() {
+	public int getScore() {
 		return score;
 	}
 
