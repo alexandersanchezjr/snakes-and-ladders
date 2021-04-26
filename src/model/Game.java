@@ -3,6 +3,7 @@ package model;
 import java.util.Random;
 
 public class Game {
+	//private final String SEPARATOR = " ";
 	
 	private final static char ASTERISK = '*';
 	private final static char EXCLAMATION = '!';
@@ -30,6 +31,7 @@ public class Game {
 		rt = new RankingTree();
 		createGame(snakes, ladders);
 		assignRandomSymbols(players);
+		first.setPlayer(this.players);
 	}
 	
 	public Game (int columns, int rows, int snakes, int ladders, String players) {
@@ -37,6 +39,16 @@ public class Game {
 		this.rows = rows;
 		rt = new RankingTree();
 		createGame(snakes, ladders);
+		assignSymbols(players, players.length());
+		first.setPlayer(this.players);
+	}
+
+	private void assignSymbols(String playersSymbols, int length){
+		if (length > 0) {
+			assignSymbols(playersSymbols, length--);
+			Player newPlayer = new Player (playersSymbols.charAt(length));
+			addPlayer(newPlayer, players);
+		}
 	}
 
 	private void createGame(int snakes, int ladders) {
@@ -46,17 +58,38 @@ public class Game {
 		includeLadders(ladders);
 	}
 	
-	private void addPlayer(char c) {
-		
+	private void addPlayer(Player newPlayer, Player current) {
+		 if (players == null) {
+			 players = newPlayer;
+		 }else if (current.getRight() == null){
+			 current.setRight(newPlayer);
+		 }else {
+			 addPlayer(newPlayer, current.getRight());
+		 }
+
 	}
 	
-	private void assignRandomSymbols(int players) {
-		if(players != 0) {
+	private void assignRandomSymbols(int numberOfPlayers) {
+		if(numberOfPlayers != 0) {
 			char symbol = generateRandomSymbol();
-			addPlayer(symbol);
-			assignRandomSymbols(players--);
-			//TODO Hacer la verificación de que no escoga el mismo simbolo
+			Player newPlayer = new Player (symbol);
+			if (!searchPlayer(newPlayer, players)) {
+				addPlayer(newPlayer, players);
+			}
+			assignRandomSymbols(numberOfPlayers--);
 		}
+	}
+	
+	private boolean searchPlayer (Player player, Player current) {
+		boolean found = false;
+		if (current != null) {
+			if (player.getSymbol() == current.getSymbol()) {
+				found = true;
+			}else {
+				found = searchPlayer (player, current.getRight());
+			}
+		}
+		return found;
 	}
 	
 	private char generateRandomSymbol() {
@@ -301,33 +334,56 @@ public class Game {
 		return rt.toString();
 	}
 	
-//	public String toString() {
-//		String msg;
-//		msg = toStringRow(first);
-//		return msg;
-//	}
-//
-//	private String toStringRow(Node firstRow) {
-//		String msg = "";
-//		if(firstRow!=null) {
-//			msg = toStringCol(firstRow) + "\n";
-//			msg += toStringRow(firstRow.getDown());
-//		}
-//		return msg;
-//	}
-//
-//	private String toStringCol(Node current) {
-//		String msg = "";
-//		if(current!=null) {
-//			msg = current.toString();
-//			msg += toStringCol(current.getNext());
-//		}
-//		return msg;
-//	}
-//	
-//	public String toString2() {
-//		String msg = "";
-//		
-//		return msg;
-//	}
+	public void movePlayer () {
+		
+	}
+	
+	public String boardToString() {
+		String msg;
+		msg = boardRowToString(first);
+		return msg;
+	}
+
+	private String boardRowToString (Cell firstRow) {
+		String msg = "";
+		if(firstRow != null) {
+			msg = boardColumnToString(firstRow) + "\n";
+			msg += boardRowToString(firstRow.getDown());
+		}
+		return msg;
+	}
+
+	private String boardColumnToString(Cell current) {
+		String msg = "";
+		if(current != null) {
+			msg = current.cellToString();
+			msg += boardColumnToString(current.getRight());
+		}
+		return msg;
+	}
+	
+	public String gameToString() {
+		String msg;
+		msg = gameRowToString(first);
+		return msg;
+	}
+
+	private String gameRowToString (Cell firstRow) {
+		String msg = "";
+		if(firstRow != null) {
+			msg = gameColumnToString(firstRow) + "\n";
+			msg += gameRowToString(firstRow.getDown());
+		}
+		return msg;
+	}
+
+	private String gameColumnToString(Cell current) {
+		String msg = "";
+		if(current != null) {
+			msg = current.gameToString();
+			msg += gameColumnToString(current.getRight());
+		}
+		return msg;
+	}
+
 }
