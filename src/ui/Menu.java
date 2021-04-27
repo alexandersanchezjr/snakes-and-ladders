@@ -32,6 +32,8 @@ public class Menu {
 	}
 
 	public void readGame() throws IOException {
+		System.out.println("Ingrese la informacion del juego en una sola linea con el siguiente formato:");
+		System.out.println("N°filas N°columnas N°serpientes N°escaleras N°jugadores/Simbolos\nPuede ingresar el numero de jugadores y los simbolos seran asigandos aleatoriamente o ingresar los simbolos de cada uno sin separacion... ");
 		String firstLine = br.readLine();
 		String[] parts = firstLine.split(" ");
 		int rows = Integer.parseInt(parts[0]);
@@ -80,11 +82,6 @@ public class Menu {
 		int option = readOption();
 		doOperation(option);
 		startProgram(option);
-//		do {
-//			showMenu();
-//			option = readOption();
-//			doOperation(option);
-//		} while(option != EXIT);
 	}
 	
 	private void startProgram(int option) {
