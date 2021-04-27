@@ -29,6 +29,12 @@ public class Cell {
 	}
 
 	/**
+	 * @param number the number to set
+	 */
+	public void setNumber(int number) {
+		this.number = number;
+	}
+	/**
 	 * @param snake the snake to set
 	 */
 	public void setSnake(char snake) {
