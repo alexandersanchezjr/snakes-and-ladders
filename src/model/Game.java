@@ -52,7 +52,7 @@ public class Game {
 	}
 
 	private void createGame(int snakes, int ladders) {
-		first = new Cell (1);
+		first = new Cell ();
 		createRow(1,1,first);
 		includeSnakes(snakes);
 		includeLadders(ladders);
@@ -129,64 +129,35 @@ public class Game {
 	
 
 	private void createRow(int i, int j, Cell currentFirstRow) {
-		
-		if (i % 2 != 0) {
-			createColumn(i,j++,currentFirstRow,currentFirstRow.getDown());
-			if(i+1 < rows) {
-				Cell upFirstRow = new Cell((i + 1) * j);
-				upFirstRow.setDown(currentFirstRow);
-				currentFirstRow.setUp(upFirstRow);
-				createRow(i++,j,upFirstRow);
-			}
-		}else {
-			createColumn(i,j--,currentFirstRow,currentFirstRow.getDown());
-			if(i+1 < rows) {
-				Cell downFirstRow = new Cell((i + 1) * j);
-				downFirstRow.setUp(currentFirstRow);
-				currentFirstRow.setDown(downFirstRow);
-				createRow(i++,j * columns,downFirstRow);
-			}
+		createColumn(i,j++,currentFirstRow,currentFirstRow.getDown());
+		if(i+1 < rows) {
+			Cell downFirstRow = new Cell();
+			downFirstRow.setUp(currentFirstRow);
+			currentFirstRow.setDown(downFirstRow);
+			createRow(i++,j,downFirstRow);
 		}
-			
 	}
 
-	private void createColumn(int i, int j, Cell previous, Cell previuousRow) {	//TODO This method is not working well idk why
-		if (i % 2 != 0) {
-			if(j < columns) {
-				Cell current = new Cell (i * j);
-				current.setLeft(previous);
-				previous.setRight(current);
-				
-				if(previuousRow!=null) {
-					previuousRow = previuousRow.getRight();
-					current.setUp(previuousRow);
-					previuousRow.setDown(current);
-				}
-				
-				createColumn(i,j++,current,previuousRow);
+	private void createColumn(int i, int j, Cell previous, Cell previuousRow) {	
+		if(j < columns) {
+			Cell current = new Cell ();
+			current.setLeft(previous);
+			previous.setRight(current);
+			
+			if(previuousRow!=null) {
+				previuousRow = previuousRow.getRight();
+				current.setUp(previuousRow);
+				previuousRow.setDown(current);
 			}
-		}else {
-			if(j < columns) {
-				Cell current = new Cell (i * j);
-				current.setLeft(previous);
-				previous.setRight(current);
-				
-				if(previuousRow!=null) {
-					previuousRow = previuousRow.getRight();
-					current.setUp(previuousRow);
-					previuousRow.setDown(current);
-				}
-				
-				createColumn(i,j--,current,previuousRow);
-			}
+			
+			createColumn(i,j++,current,previuousRow);
 		}
-
 	}
 	
 	private void includeLadders(int ladders) {
 		if (ladders > 0) {
 			includeSnakes(ladders--);
-			int firstNumberToSearch = random.ints(1, ((rows * columns)+1)).findFirst().getAsInt();
+			int firstNumberToSearch = random.ints(2, ((rows * columns)+1)).findFirst().getAsInt();
 			Cell firstCell = searchCell(firstNumberToSearch);
 			if (!firstCell.hasSnakeOrLadder() && !rowHasLadder(firstCell.getLeft(), firstCell.getRight())) {
 				firstCell.setLadder(0 + ladders);
@@ -244,7 +215,7 @@ public class Game {
 	private void includeSnakes(int snakes) {
 		if (snakes > 0) {
 			includeSnakes(snakes--);
-			int firstNumberToSearch = random.ints(1, ((rows * columns)+1)).findFirst().getAsInt();
+			int firstNumberToSearch = random.ints(1, ((rows * columns))).findFirst().getAsInt();
 			Cell firstCell = searchCell(firstNumberToSearch);
 			if (!firstCell.hasSnakeOrLadder() && !rowHasSnake(firstCell.getLeft(), firstCell.getRight())) {
 				firstCell.setSnake((char)(64 + snakes));
