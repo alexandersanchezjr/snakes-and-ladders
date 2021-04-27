@@ -18,8 +18,8 @@ public class Cell {
 //		this.player = player;
 //	}
 	
-	public Cell (int number) {
-		this.number = number;
+	public Cell () {
+		
 	}
 	/**
 	 * @return the number
