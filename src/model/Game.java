@@ -162,35 +162,32 @@ public class Game {
 	
 	private void numberCells () {
 		Cell firstBoardCell = searchFirstBoardCell(first);
-		numberCellsToRight (rows, 0, firstBoardCell);
+		numberCellsToRight (rows, columns + 1, firstBoardCell);
 	}
 	
 	private void numberCellsToRight (int i, int j, Cell current) {
 		if (current != null) {
-			boardToString();
-			current.setNumber(cont);
-			cont++;
+			numberCellsToRight(i, j + 1, current.getRight());
+			current.setNumber(j - columns);
+			//cont++;
 			System.out.println("i: " + i + " j: " + j);
-			numberCellsToRight(i, j+1, current.getRight());
-			if (current.getUp() != null) {
+			if (current.getUp() != null && current.getLeft() == null) {
 				Cell currentUp = current.getUp();
-				currentUp.setNumber(cont);
-				numberCellsToLeft(i-1, columns - 1, currentUp);
+				numberCellsToLeft(i-1, j - 1, currentUp);
 			}
 		}
 	}
 	
 	private void numberCellsToLeft (int i, int j, Cell current) {
 		if (current != null)  {
-			boardToString();
+			numberCellsToLeft(i, j - 1, current.getRight());
 			System.out.println("Keep calm, si entré");
-			current.setNumber(cont);
-			cont++;
+			current.setNumber(columns + j);
+//			cont++;
 			System.out.println("i: " + i + " j: " + j);
-			numberCellsToLeft(i, j-1, current.getLeft());
-			if (current.getUp() != null){
+			if (current.getUp() != null && current.getLeft() == null){
 				Cell currentUp = current.getUp();
-				numberCellsToRight (i-1, 0, currentUp);
+				numberCellsToRight (i-1, columns + (2*j) + 1, currentUp);
 			}
 		}
 		
