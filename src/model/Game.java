@@ -15,6 +15,8 @@ public class Game {
 	private final static char PLUS = '+';
 	private final static char AMPERSAND = '&';
 	
+	private int cont;
+	
 	private Cell first;
 	private int columns;
 	private int rows;
@@ -25,19 +27,21 @@ public class Game {
 	Random random = new Random();
 
 	
-	public Game (int columns, int rows, int snakes, int ladders, int players) {
+	public Game (int rows, int columns, int snakes, int ladders, int players) {
 		this.columns = columns;
 		this.rows = rows;
 		rt = new RankingTree();
+		cont = 1;
 		createGame(snakes, ladders);
 		assignRandomSymbols(players);
 		first.setPlayer(this.players);
 	}
 	
-	public Game (int columns, int rows, int snakes, int ladders, String players) {
+	public Game (int rows, int columns, int snakes, int ladders, String players) {
 		this.columns = columns;
 		this.rows = rows;
 		rt = new RankingTree();
+		cont = 1;
 		createGame(snakes, ladders);
 		assignSymbols(players, players.length());
 		first.setPlayer(this.players);
@@ -53,7 +57,9 @@ public class Game {
 
 	private void createGame(int snakes, int ladders) {
 		first = new Cell ();
-		createRow(1,1,first);
+		createRow(0,0,first);
+		numberCells();
+		System.out.println(boardToString());
 		includeSnakes(snakes);
 		includeLadders(ladders);
 	}
@@ -129,12 +135,12 @@ public class Game {
 	
 
 	private void createRow(int i, int j, Cell currentFirstRow) {
-		createColumn(i,j++,currentFirstRow,currentFirstRow.getDown());
+		createColumn(i,j+1,currentFirstRow,currentFirstRow.getDown());
 		if(i+1 < rows) {
 			Cell downFirstRow = new Cell();
 			downFirstRow.setUp(currentFirstRow);
 			currentFirstRow.setDown(downFirstRow);
-			createRow(i++,j,downFirstRow);
+			createRow(i+1,j,downFirstRow);
 		}
 	}
 
@@ -150,18 +156,64 @@ public class Game {
 				previuousRow.setDown(current);
 			}
 			
-			createColumn(i,j++,current,previuousRow);
+			createColumn(i,j+1,current,previuousRow);
 		}
+	}
+	
+	private void numberCells () {
+		Cell firstBoardCell = searchFirstBoardCell(first);
+		numberCellsToRight (rows, 0, firstBoardCell);
+	}
+	
+	private void numberCellsToRight (int i, int j, Cell current) {
+		if (current != null) {
+			boardToString();
+			current.setNumber(cont);
+			cont++;
+			System.out.println("i: " + i + " j: " + j);
+			numberCellsToRight(i, j+1, current.getRight());
+			if (current.getUp() != null) {
+				Cell currentUp = current.getUp();
+				currentUp.setNumber(cont);
+				numberCellsToLeft(i-1, columns - 1, currentUp);
+			}
+		}
+	}
+	
+	private void numberCellsToLeft (int i, int j, Cell current) {
+		if (current != null)  {
+			boardToString();
+			System.out.println("Keep calm, si entré");
+			current.setNumber(cont);
+			cont++;
+			System.out.println("i: " + i + " j: " + j);
+			numberCellsToLeft(i, j-1, current.getLeft());
+			if (current.getUp() != null){
+				Cell currentUp = current.getUp();
+				numberCellsToRight (i-1, 0, currentUp);
+			}
+		}
+		
+	}
+	
+	private Cell searchFirstBoardCell (Cell current) {
+		Cell firstBoardCell = null;
+		if (current.getDown() == null) {
+			firstBoardCell = current;
+		}else {
+			firstBoardCell = searchFirstBoardCell(current.getDown());
+		}
+		return firstBoardCell;
 	}
 	
 	private void includeLadders(int ladders) {
 		if (ladders > 0) {
-			includeSnakes(ladders--);
+			includeSnakes(ladders-1);
 			int firstNumberToSearch = random.ints(2, ((rows * columns)+1)).findFirst().getAsInt();
 			Cell firstCell = searchCell(firstNumberToSearch);
 			if (!firstCell.hasSnakeOrLadder() && !rowHasLadder(firstCell.getLeft(), firstCell.getRight())) {
 				firstCell.setLadder(0 + ladders);
-				int secondNumberToSearch = random.ints(1, ((rows * columns)+1)).findFirst().getAsInt();
+				int secondNumberToSearch = random.ints(2, ((rows * columns)+1)).findFirst().getAsInt();
 				Cell secondCell = searchCell(secondNumberToSearch);
 				if (!secondCell.hasSnakeOrLadder() && !rowHasLadder(secondCell.getLeft(), secondCell.getRight())) {
 					secondCell.setLadder(0 + ladders);
@@ -214,12 +266,12 @@ public class Game {
 	
 	private void includeSnakes(int snakes) {
 		if (snakes > 0) {
-			includeSnakes(snakes--);
+			includeSnakes(snakes-1);
 			int firstNumberToSearch = random.ints(1, ((rows * columns))).findFirst().getAsInt();
 			Cell firstCell = searchCell(firstNumberToSearch);
 			if (!firstCell.hasSnakeOrLadder() && !rowHasSnake(firstCell.getLeft(), firstCell.getRight())) {
 				firstCell.setSnake((char)(64 + snakes));
-				int secondNumberToSearch = random.ints(1, ((rows * columns)+1)).findFirst().getAsInt();
+				int secondNumberToSearch = random.ints(1, ((rows * columns))).findFirst().getAsInt();
 				Cell secondCell = searchCell(secondNumberToSearch);
 				if (!secondCell.hasSnakeOrLadder() && !rowHasSnake(secondCell.getLeft(), secondCell.getRight())) {
 					secondCell.setSnake((char)(64 + snakes));
@@ -279,9 +331,9 @@ public class Game {
 		if (currentFirstRow.getNumber() == cellNumber)
 			cell = currentFirstRow;
 		else {
-			cell = searchCellInColumn(i, j++, cellNumber, currentFirstRow.getRight());
-			if(i++ < rows && cell == null) {				
-				cell = searchCellInRow(i++, j, cellNumber, currentFirstRow.getUp());
+			cell = searchCellInColumn(i, j+1, cellNumber, currentFirstRow.getRight());
+			if(i+1 < rows && cell == null) {				
+				cell = searchCellInRow(i+1, j, cellNumber, currentFirstRow.getDown());
 			}
 		}
 		
@@ -294,7 +346,7 @@ public class Game {
 			if (currentColumn.getNumber() == cellNumber)
 				cell = currentColumn;
 			else if(j < columns && currentColumn.getRight() !=null) {
-				cell = searchCellInColumn(i, j++, cellNumber, currentColumn.getRight());
+				cell = searchCellInColumn(i, j+1, cellNumber, currentColumn.getRight());
 			}
 		}
 		return cell;
