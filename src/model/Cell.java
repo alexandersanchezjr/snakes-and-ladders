@@ -18,8 +18,8 @@ public class Cell {
 //		this.player = player;
 //	}
 	
-	public Cell (int number) {
-		this.number = number;
+	public Cell () {
+		
 	}
 	/**
 	 * @return the number
@@ -28,6 +28,12 @@ public class Cell {
 		return number;
 	}
 
+	/**
+	 * @param number the number to set
+	 */
+	public void setNumber(int number) {
+		this.number = number;
+	}
 	/**
 	 * @param snake the snake to set
 	 */
