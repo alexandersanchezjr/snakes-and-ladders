@@ -10,7 +10,11 @@ import java.io.IOException;
  * @author Santiago Arevalo
  */
 public class Main {
-
+	/**
+	 * 
+	 */
+	public Main() {
+	}
 
 	/**
 	 * @param args
