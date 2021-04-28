@@ -20,6 +20,11 @@ public class Game {
 	private int rows;
 	private Player players;
 	
+	private int firstLadder;
+	private int secondLadder;
+	private int firstSnake;
+	private int secondSnake;
+	
 	private RankingTree rt;
 	
 	Random random = new Random();
@@ -56,8 +61,8 @@ public class Game {
 		createRow(0,0,first);
 		numberCells();
 		System.out.println(boardToString());
-		includeSnakes(snakes, false);
-		includeLadders(ladders, false);
+		includeSnakes(snakes);
+		includeLadders(ladders);
 	}
 	
 	private void addPlayer(Player newPlayer, Player current) {
@@ -194,26 +199,42 @@ public class Game {
 		return firstBoardCell;
 	}
 	
-	private void includeLadders(int ladders, boolean exit) {
-		if (ladders > 0 && exit != true) {
-			includeLadders(ladders-1, exit);
-			int firstNumberToSearch = (int) (Math.random() * rows * columns) + 1;//random.ints(2, ((rows * columns)+1)).findFirst().getAsInt();
-			System.out.println(firstNumberToSearch);
-			Cell firstCell = searchCell(firstNumberToSearch);
-			System.out.println("Escalera: " + firstCell);
+	private void includeLadders(int ladders) {
+		if (ladders > 0) {
+			createFirstLadder(false, ladders);
+			includeLadders(ladders-1);
+		}
+	}
+	
+	private void createFirstLadder (boolean stop, int ladders) {
+		if (stop != true) {
+			firstLadder = random.ints(2, ((rows * columns)+1)).findFirst().getAsInt();
+			Cell firstCell = searchCell(firstLadder);
 			if (!firstCell.hasSnakeOrLadder() && !rowHasLadder(firstCell)) {
-				firstCell.setLadder(0 + ladders);
-				int secondNumberToSearch = random.ints(2, ((rows * columns)+1)).findFirst().getAsInt();
-				Cell secondCell = searchCell(secondNumberToSearch);
-				if (!secondCell.hasSnakeOrLadder() && !rowHasLadder(secondCell)) {
-					secondCell.setLadder(0 + ladders);
-					exit = true;
-				}else {
-					includeLadders(ladders, exit);
-				}
-			}else {
-				includeLadders(ladders, exit);
+				System.out.println(firstLadder);
+				System.out.println("Escalera: " + ladders + " creada en la casilla " + firstCell.getNumber());
+				System.out.println(firstCell.hasSnakeOrLadder() + " " + rowHasLadder(firstCell));
+				firstCell.setLadder(ladders);
+				stop = true;
+				createSecondLadder (false, ladders);
 			}
+			createFirstLadder (stop, ladders);
+		}
+		
+	}
+	
+	private void createSecondLadder (boolean stop, int ladders) {
+		if (stop != true) {
+			secondLadder = random.ints(2, ((rows * columns)+1)).findFirst().getAsInt();
+			Cell secondCell = searchCell(secondLadder);
+			if (!secondCell.hasSnakeOrLadder() && !rowHasLadder(secondCell)) {
+				System.out.println(secondLadder);
+				System.out.println("Escalera: " + ladders + " creada en la casilla " + secondCell.getNumber());
+				System.out.println(secondCell.hasSnakeOrLadder() + " " + rowHasLadder(secondCell));
+				secondCell.setLadder(ladders);
+				stop = true;
+			}
+			createSecondLadder (stop, ladders);
 		}
 	}
 	
@@ -263,27 +284,43 @@ public class Game {
 		
 	}
 	
-	private void includeSnakes(int snakes, boolean exit) {
-		if (snakes > 0 && exit != true) {
-			includeSnakes(snakes-1, exit);
-			int firstNumberToSearch = (int) (Math.random() * ((rows * columns) - 1)) + 1;
-			System.out.println(firstNumberToSearch);
-			Cell firstCell = searchCell(firstNumberToSearch);
-			System.out.println("Serpiente: " + firstCell);
-			if (!firstCell.hasSnakeOrLadder() && !rowHasSnake(firstCell)) {
-				firstCell.setSnake((char)(64 + snakes));
-				int secondNumberToSearch = random.ints(1, (rows * columns)).findFirst().getAsInt();
-				Cell secondCell = searchCell(secondNumberToSearch);
-				if (!secondCell.hasSnakeOrLadder() && !rowHasSnake(secondCell)) {
-					secondCell.setSnake((char)(64 + snakes));
-					exit = true;
-				}else {
-					includeLadders(snakes, exit);
-				}
-			}else {
-				includeSnakes(snakes, exit);
-			}
+	private void includeSnakes(int snakes) {
+		if (snakes > 0) {
+			createFirstSnake(false, snakes);
+			includeSnakes(snakes-1);
 		}
+	}
+	
+	private void createFirstSnake (boolean stop, int snakes) {
+		if (stop != true) {
+			firstSnake = random.ints(1, (rows * columns)).findFirst().getAsInt();
+			Cell firstCell = searchCell(firstSnake);
+			if (!firstCell.hasSnakeOrLadder() && !rowHasSnake(firstCell)) {
+				System.out.println(firstSnake);
+				System.out.println("Serpiente: " + snakes + " creada en la casilla " +  firstCell.getNumber());
+				System.out.println(firstCell.hasSnakeOrLadder() + " " + rowHasLadder(firstCell));
+				firstCell.setSnake((char)(64 + snakes));
+				stop = true;
+				createSecondSnake(false, snakes);
+			}
+			createFirstSnake (stop, snakes);
+		}
+	}
+	
+	private void createSecondSnake (boolean stop, int snakes) {
+		if (stop != true) {
+			secondSnake = random.ints(1, (rows * columns)).findFirst().getAsInt();
+			Cell secondCell = searchCell(secondSnake);
+			if (!secondCell.hasSnakeOrLadder() && !rowHasSnake(secondCell)) {
+				System.out.println(secondSnake);
+				System.out.println("Serpiente: " + snakes + " creada en la casilla " + secondCell.getNumber());
+				System.out.println(secondCell.hasSnakeOrLadder() + " " + rowHasSnake(secondCell));
+				secondCell.setSnake((char)(64 + snakes));
+				stop = true;
+			}
+			createSecondSnake (stop, snakes);
+		}
+			
 	}
 	
 	private boolean rowHasSnake(Cell current) {
