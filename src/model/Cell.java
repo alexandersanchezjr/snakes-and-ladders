@@ -94,22 +94,30 @@ public class Cell {
 	
 	public String cellToString() {
 		if (snake != 0) 
-			return "[" + number + snake + "]";
+			return "[" + number + snake + "\t]";
 		else if (ladder != 0)
-			return "[" + number + ladder + "]";
+			return "[" + number + ladder + "\t]";
 		else 
-			return "[" + number + "]";
+			return "[" + number + "\t]";
 		
 	}
 	
 	public String gameToString () {
 		if (snake != 0) 
-			return "[" + snake + player.toString(player) + "]";
+			return "[" + snake + playersToString () + "\t]";
 		else if (ladder != 0)
-			return "[" + ladder + player.toString(player) + "]";
+			return "[" + ladder + playersToString () + "\t]";
 		else if (player != null)
-			return "[" + player.toString(player) + "]";
+			return "[" + playersToString () + "\t]";
 		else
 			return "[\t]";
+	}
+	
+	private String playersToString () {
+		String playersString = "";
+		if (player != null) {
+			playersString = player.toString(player);
+		}
+		return playersString;
 	}
 }
