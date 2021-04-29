@@ -20,6 +20,7 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		System.out.println("¡Bienvenido a Serpientes y Escaleras!");
 		Menu menu = new Menu ();
 		try {
 			menu.startProgram();
