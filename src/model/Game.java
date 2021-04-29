@@ -1,6 +1,6 @@
 package model;
 
-import java.util.Random;
+//import java.util.Random;
 
 public class Game {
 	//private final String SEPARATOR = " ";
@@ -27,13 +27,22 @@ public class Game {
 	
 	private RankingTree rt;
 	
-	Random random = new Random();
+//	Random ladder1;  
+//	Random ladder2; 
+//	Random snake1;
+//	Random snake2;
+//	Random symbolRandom;
 
 	
 	public Game (int rows, int columns, int snakes, int ladders, int players) {
 		this.columns = columns;
 		this.rows = rows;
 		rt = new RankingTree();
+//		ladder1 = new Random();
+//		ladder2 = new Random();
+//		snake1 = new Random();
+//		snake2 = new Random();
+//		symbolRandom = new Random();
 		createGame(snakes, ladders);
 		assignRandomSymbols(players);
 		first.setPlayer(this.players);
@@ -101,7 +110,7 @@ public class Game {
 	
 	private char generateRandomSymbol() {
 		char symbol = 0;
-		int symbolNumber = random.ints(1, 9).findFirst().getAsInt();
+		int symbolNumber = (int) ((Math.random() * (9-1)) +1);
 		switch(symbolNumber) {
 		case 1:
 			symbol = ASTERISK;
@@ -208,8 +217,8 @@ public class Game {
 	
 	private void createFirstLadder (boolean stop, int ladders) {
 		if (stop != true) {
-			firstLadder = random.ints(2, ((rows * columns)+1)).findFirst().getAsInt();
-			random.ints(2, ((rows * columns)+1)).close();
+
+			firstLadder = (int) ((Math.random() * ((rows*columns)-2)) + 2);
 			Cell firstCell = searchCell(firstLadder);
 			if (!firstCell.hasSnakeOrLadder() && !rowHasLadder(firstCell)) {
 				System.out.println(firstLadder);
@@ -226,8 +235,8 @@ public class Game {
 	
 	private void createSecondLadder (boolean stop, int ladders) {
 		if (stop != true) {
-			secondLadder = random.ints(2, ((rows * columns)+1)).findFirst().getAsInt();
-			random.ints(2, ((rows * columns)+1)).close();
+
+			secondLadder = (int) ((Math.random() * ((rows*columns)-2)) + 2);
 			Cell secondCell = searchCell(secondLadder);
 			if (!secondCell.hasSnakeOrLadder() && !rowHasLadder(secondCell)) {
 				System.out.println(secondLadder);
@@ -235,9 +244,9 @@ public class Game {
 				System.out.println(secondCell.hasSnakeOrLadder() + " " + rowHasLadder(secondCell));
 				secondCell.setLadder(ladders);
 				stop = true;
-			}
+			}			
+			createSecondLadder (stop, ladders);
 		}
-		createSecondLadder (stop, ladders);
 	}
 	
 	private boolean rowHasLadder(Cell current) {
@@ -291,11 +300,12 @@ public class Game {
 			createFirstSnake(false, snakes);
 			includeSnakes(snakes-1);
 		}
+		System.out.println(boardToString());
 	}
 	
 	private void createFirstSnake (boolean stop, int snakes) {
 		if (stop != true) {
-			firstSnake = random.ints(1, (rows * columns)).findFirst().getAsInt();
+			firstSnake = (int) ((Math.random() * ((rows*columns)-1)) + 1);
 			Cell firstCell = searchCell(firstSnake);
 			if (!firstCell.hasSnakeOrLadder() && !rowHasSnake(firstCell)) {
 				System.out.println(firstSnake);
@@ -311,7 +321,7 @@ public class Game {
 	
 	private void createSecondSnake (boolean stop, int snakes) {
 		if (stop != true) {
-			secondSnake = random.ints(1, (rows * columns)).findFirst().getAsInt();
+			secondSnake = (int) ((Math.random() * ((rows*columns)-1)) + 1);
 			Cell secondCell = searchCell(secondSnake);
 			if (!secondCell.hasSnakeOrLadder() && !rowHasSnake(secondCell)) {
 				System.out.println(secondSnake);
