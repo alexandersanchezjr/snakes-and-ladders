@@ -86,13 +86,13 @@ public class Game {
 	}
 	
 	private void assignRandomSymbols(int numberOfPlayers) {
-		if(numberOfPlayers != 0) {
+		if(numberOfPlayers > 0) {
 			char symbol = generateRandomSymbol();
 			Player newPlayer = new Player (symbol);
 			if (!searchPlayer(newPlayer, players)) {
 				addPlayer(newPlayer, players);
 			}
-			assignRandomSymbols(numberOfPlayers--);
+			assignRandomSymbols(numberOfPlayers-1);
 		}
 	}
 	
@@ -216,11 +216,11 @@ public class Game {
 	}
 	
 	private void createFirstLadder (boolean stop, int ladders) {
-		if (stop != true) {
+		if (!stop) {
 
 			firstLadder = (int) ((Math.random() * ((rows*columns)-2)) + 2);
 			Cell firstCell = searchCell(firstLadder);
-			if (!firstCell.hasSnakeOrLadder() && !rowHasLadder(firstCell)) {
+			if (!firstCell.hasSnakeOrLadder()) {
 				System.out.println(firstLadder);
 				System.out.println("Escalera: " + ladders + " creada en la casilla " + firstCell.getNumber());
 				System.out.println(firstCell.hasSnakeOrLadder() + " " + rowHasLadder(firstCell));
@@ -234,18 +234,19 @@ public class Game {
 	}
 	
 	private void createSecondLadder (boolean stop, int ladders) {
-		if (stop != true) {
-
+		if (!stop) {
 			secondLadder = (int) ((Math.random() * ((rows*columns)-2)) + 2);
 			Cell secondCell = searchCell(secondLadder);
-			if (!secondCell.hasSnakeOrLadder() && !rowHasLadder(secondCell)) {
+			if (!secondCell.hasSnakeOrLadder()) {
 				System.out.println(secondLadder);
 				System.out.println("Escalera: " + ladders + " creada en la casilla " + secondCell.getNumber());
 				System.out.println(secondCell.hasSnakeOrLadder() + " " + rowHasLadder(secondCell));
 				secondCell.setLadder(ladders);
 				stop = true;
-			}			
-			createSecondLadder (stop, ladders);
+			}
+			if(!stop) {
+				createSecondLadder (!stop, ladders);
+			}
 		}
 	}
 	
@@ -300,7 +301,6 @@ public class Game {
 			createFirstSnake(false, snakes);
 			includeSnakes(snakes-1);
 		}
-		System.out.println(boardToString());
 	}
 	
 	private void createFirstSnake (boolean stop, int snakes) {
