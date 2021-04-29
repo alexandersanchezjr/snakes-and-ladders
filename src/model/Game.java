@@ -209,6 +209,7 @@ public class Game {
 	private void createFirstLadder (boolean stop, int ladders) {
 		if (stop != true) {
 			firstLadder = random.ints(2, ((rows * columns)+1)).findFirst().getAsInt();
+			random.ints(2, ((rows * columns)+1)).close();
 			Cell firstCell = searchCell(firstLadder);
 			if (!firstCell.hasSnakeOrLadder() && !rowHasLadder(firstCell)) {
 				System.out.println(firstLadder);
@@ -226,6 +227,7 @@ public class Game {
 	private void createSecondLadder (boolean stop, int ladders) {
 		if (stop != true) {
 			secondLadder = random.ints(2, ((rows * columns)+1)).findFirst().getAsInt();
+			random.ints(2, ((rows * columns)+1)).close();
 			Cell secondCell = searchCell(secondLadder);
 			if (!secondCell.hasSnakeOrLadder() && !rowHasLadder(secondCell)) {
 				System.out.println(secondLadder);
@@ -234,8 +236,8 @@ public class Game {
 				secondCell.setLadder(ladders);
 				stop = true;
 			}
-			createSecondLadder (stop, ladders);
 		}
+		createSecondLadder (stop, ladders);
 	}
 	
 	private boolean rowHasLadder(Cell current) {
