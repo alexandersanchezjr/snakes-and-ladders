@@ -74,13 +74,13 @@ public class Game {
 	}
 	
 	private void assignRandomSymbols(int numberOfPlayers) {
-		if(numberOfPlayers != 0) {
+		if(numberOfPlayers > 0) {
 			char symbol = generateRandomSymbol();
 			Player newPlayer = new Player (symbol);
 			if (!searchPlayer(newPlayer, players)) {
 				addPlayer(newPlayer, players);
 			}
-			assignRandomSymbols(numberOfPlayers--);
+			assignRandomSymbols(numberOfPlayers-1);
 		}
 	}
 	
@@ -204,7 +204,7 @@ public class Game {
 	}
 	
 	private void createFirstLadder (boolean stop, int ladders) {
-		if (stop != true) {
+		if (!stop) {
 
 			firstLadder = (int) ((Math.random() * ((rows*columns)-2)) + 2);
 			Cell firstCell = searchCell(firstLadder);
@@ -219,14 +219,17 @@ public class Game {
 	}
 	
 	private void createSecondLadder (boolean stop, int ladders) {
-		if (stop != true) {
+
+		if (!stop) {
 			secondLadder = (int) ((Math.random() * ((rows*columns)-2)) + 2);
 			Cell secondCell = searchCell(secondLadder);
 			if (!secondCell.hasSnakeOrLadder()) {
 				secondCell.setLadder(ladders);
 				stop = true;
-			}			
-			createSecondLadder (stop, ladders);
+			}
+			if(!stop) {
+				createSecondLadder (!stop, ladders);
+			}
 		}
 	}
 	
