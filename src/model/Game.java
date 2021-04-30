@@ -211,10 +211,9 @@ public class Game {
 		if (!stop) {
 			firstLadder = (int) ((Math.random() * ((rows*columns)-2)) + 2);
 			Cell firstCell = searchCell(firstLadder);
-			if (!firstCell.hasSnakeOrLadder()) {
+			if (!firstCell.hasSnakeOrLadder() && rowHaSameLadder(firstCell, firstCell.getLadder())) {
 				firstCell.setLadder(ladders);
 				stop = true;
-				System.out.println("Escalera: " + ladders + "ubicada en: " + firstCell.getNumber());
 				createSecondLadder (false, ladders);
 			}
 			createFirstLadder (stop, ladders);
@@ -227,60 +226,63 @@ public class Game {
 		if (!stop) {
 			secondLadder = (int) ((Math.random() * ((rows*columns)-2)) + 2);
 			Cell secondCell = searchCell(secondLadder);
-			if (!secondCell.hasSnakeOrLadder()) {
+			if (!secondCell.hasSnakeOrLadder() && rowHaSameLadder(secondCell, secondCell.getLadder())) {
 				secondCell.setLadder(ladders);
 				stop = true;
-				System.out.println("Escalera: " + ladders + "ubicada en: " + secondCell.getNumber());
 			}
 			createSecondLadder (stop, ladders);
 		}
 	}
 	
-//	private boolean rowHasLadder(Cell current) {	//DEPRECATED
-//		boolean ladder = false;
-//		boolean ladderInLeft = false;
-//		boolean ladderInRight = false;
-//		if (current.getLeft() != null) {
-//			ladderInLeft = leftRowHasLadder (current.getLeft());		
-//		}
-//		if (current.getRight() != null) {
-//			ladderInRight = rightRowHasLadder (current.getRight());			
-//		}
-//		if (ladderInLeft == true || ladderInRight == true)
-//			ladder = true;
-//		return ladder;
-//	}
+	private boolean rowHaSameLadder(Cell current, int cellLadder) {	
+		boolean ladder = false;
+		boolean ladderInLeft = false;
+		boolean ladderInRight = false;
+		if (current.getLeft() != null) {
+			ladderInLeft = leftRowHasSameLadder (current.getLeft(), cellLadder);		
+		}
+		if (current.getRight() != null) {
+			ladderInRight = rightRowHasSameLadder (current.getRight(), cellLadder);			
+		}
+		if (ladderInLeft == true || ladderInRight == true)
+			ladder = true;
+		return ladder;
+	}
 	
-//	private boolean leftRowHasLadder (Cell leftCell) {
-//		boolean ladderInLeft = false;
-//		boolean exit = false;
-//		if (leftCell != null) {
-//			ladderInLeft = leftCell.hasSnakeOrLadder();	
-//			if (ladderInLeft == true)
-//				exit = true;
-//			else 
-//				exit = leftRowHasLadder (leftCell.getLeft());
-//		}else
-//			exit = false; 
-//
-//		return exit;
-//	}
-//	
-//	private boolean rightRowHasLadder (Cell rightCell) {
-//		boolean ladderInRight = false;
-//		boolean exit = false;
-//		if (rightCell != null) {
-//			ladderInRight = rightCell.hasSnakeOrLadder();	
-//			if (ladderInRight == true)
-//				exit = true;
-//			else 
-//				exit = rightRowHasLadder (rightCell.getRight());
-//		}else
-//			exit = false; 
-//
-//		return exit;
-//		
-//	}
+	private boolean leftRowHasSameLadder (Cell leftCell, int cellLadder) {
+		boolean sameLadderInLeft = false;
+		boolean exit = false;
+		if (leftCell != null) {
+			if (leftCell.getLadder() == cellLadder) {
+				sameLadderInLeft = true;	
+			}
+			if (sameLadderInLeft == true)
+				exit = true;
+			else 
+				exit = leftRowHasSameLadder (leftCell.getLeft(), cellLadder);
+		}else
+			exit = false; 
+
+		return exit;
+	}
+	
+	private boolean rightRowHasSameLadder (Cell rightCell, int cellLadder) {
+		boolean sameLadderInRight = false;
+		boolean exit = false;
+		if (rightCell != null) {
+			if (rightCell.getLadder() == cellLadder) {
+				sameLadderInRight = true;	
+			}			
+			if (sameLadderInRight == true)
+				exit = true;
+			else 
+				exit = rightRowHasSameLadder (rightCell.getRight(), cellLadder);
+		}else
+			exit = false; 
+
+		return exit;
+		
+	}
 	
 	private void includeSnakes(int snakes) {
 		if (snakes > 0) {
@@ -294,7 +296,7 @@ public class Game {
 		if (stop != true) {
 			firstSnake = (int) ((Math.random() * ((rows*columns)-1)) + 1);
 			Cell firstCell = searchCell(firstSnake);
-			if (!firstCell.hasSnakeOrLadder()) {
+			if (!firstCell.hasSnakeOrLadder() && rowHasSameSnake(firstCell, firstCell.getSnake())) {
 				firstCell.setSnake((char)(64 + snakes));
 				stop = true;
 			}
@@ -315,51 +317,55 @@ public class Game {
 			
 	}
 	
-//	private boolean rowHasSnake(Cell current) {
-//		boolean snake = false;
-//		boolean snakeInLeft = false;
-//		boolean snakeInRight = false;
-//		if (current.getLeft() != null) {
-//			snakeInLeft = leftRowHasSnake (current.getLeft());		
-//		}
-//		if (current.getRight() != null) {
-//			snakeInRight = rightRowHasSnake (current.getRight());			
-//		}
-//		if (snakeInLeft == true || snakeInRight == true)
-//			snake = true;
-//		return snake;
-//	}
-//	
-//	private boolean leftRowHasSnake (Cell leftCell) {
-//		boolean snakesInLeft = false;
-//		boolean exit = false;
-//		if (leftCell != null) {
-//			snakesInLeft = leftCell.hasSnakeOrLadder();	
-//			if (snakesInLeft == true)
-//				exit = true;
-//			else 
-//				exit = leftRowHasSnake (leftCell.getLeft());
-//		}else
-//			exit = false; 
-//
-//		return exit;
-//	}
-//	
-//	private boolean rightRowHasSnake (Cell rightCell) {
-//		boolean snakesInRight = false;
-//		boolean exit = false;
-//		if (rightCell != null) {
-//			snakesInRight = rightCell.hasSnakeOrLadder();	
-//			if (snakesInRight == true)
-//				exit = true;
-//			else 
-//				exit = rightRowHasSnake (rightCell.getRight());
-//		}else
-//			exit = false; 
-//
-//		return exit;
-//		
-//	}
+	private boolean rowHasSameSnake(Cell current, char cellSnake) {
+		boolean snake = false;
+		boolean snakeInLeft = false;
+		boolean snakeInRight = false;
+		if (current.getLeft() != null) {
+			snakeInLeft = leftRowHasSameSnake (current.getLeft(), cellSnake);		
+		}
+		if (current.getRight() != null) {
+			snakeInRight = rightRowHasSameSnake (current.getRight(), cellSnake);			
+		}
+		if (snakeInLeft == true || snakeInRight == true)
+			snake = true;
+		return snake;
+	}
+	
+	private boolean leftRowHasSameSnake (Cell leftCell, char cellSnake) {
+		boolean sameSnakeInLeft = false;
+		boolean exit = false;
+		if (leftCell != null) {
+			if (cellSnake == leftCell.getSnake()){
+				sameSnakeInLeft = true;	
+			}
+			if (sameSnakeInLeft == true)
+				exit = true;
+			else 
+				exit = leftRowHasSameSnake (leftCell.getLeft(), cellSnake);
+		}else
+			exit = false; 
+
+		return exit;
+	}
+	
+	private boolean rightRowHasSameSnake (Cell rightCell, char cellSnake) {
+		boolean sameSnakeInRight = false;
+		boolean exit = false;
+		if (rightCell != null) {
+			if (cellSnake == rightCell.getSnake()){
+				sameSnakeInRight = true;	
+			}
+			if (sameSnakeInRight == true)
+				exit = true;
+			else 
+				exit = rightRowHasSameSnake (rightCell.getRight(), cellSnake);
+		}else
+			exit = false; 
+
+		return exit;
+		
+	}
 
 	private Cell searchCell (int cellNumber) {		
 		return searchCellInRow(0, 0, cellNumber, first);
