@@ -54,6 +54,12 @@ public class Cell {
 			return true;
 	}
 	/**
+	 * @return the player
+	 */
+	public Player getPlayer() {
+		return player;
+	}
+	/**
 	 * @param player the player to set
 	 */
 	public void setPlayer(Player player) {
