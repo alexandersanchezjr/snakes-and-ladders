@@ -45,13 +45,18 @@ public class Menu {
 		int snakes = Integer.parseInt(parts[2]);
 		int ladders = Integer.parseInt(parts[3]);
 		
-		if(parts[4].contains("*") || parts[4].contains("!") || parts[4].contains("O") || parts[4].contains("X") || parts[4].contains("%") || parts[4].contains("$") || parts[4].contains("#") || parts[4].contains("+") || parts[4].contains("&")) {
-			String players = parts[4];
-			game = new Game(rows, columns, snakes, ladders, players);
-		}else {
-			int players = Integer.parseInt(parts[4]);
-			game = new Game(rows, columns, snakes, ladders, players);
+		
+		if((snakes*2) + (ladders*2) > rows*columns) {
+			System.out.println("La cantidad de serpientes y escaleras sobrepasa las dimensiones del tablero de juego");
+			return;
 		}
+		else if(parts[4].contains("*") || parts[4].contains("!") || parts[4].contains("O") || parts[4].contains("X") || parts[4].contains("%") || parts[4].contains("$") || parts[4].contains("#") || parts[4].contains("+") || parts[4].contains("&")) {
+				String players = parts[4];
+				game = new Game(rows, columns, snakes, ladders, players);
+			}else {
+				int players = Integer.parseInt(parts[4]);
+				game = new Game(rows, columns, snakes, ladders, players);
+			}
 		
 		System.out.println(game.boardToString());
 		System.out.println("Esperando salto de linea para continuar...");
