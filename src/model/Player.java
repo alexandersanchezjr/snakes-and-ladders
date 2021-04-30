@@ -5,6 +5,7 @@ public class Player {
 	private char symbol;
 	private int cont;
 	private int score;
+	private int cellNumber;
 	private Player right;
 	
 	
@@ -16,6 +17,7 @@ public class Player {
 		this.setSymbol(symbol);
 		cont = 0;
 		setScore(0);
+		cellNumber = 1;
 	}
 
 	/**
@@ -51,6 +53,20 @@ public class Player {
 	 */
 	public void setScore(int size) {
 		score = cont*size;
+	}
+
+	/**
+	 * @return the cellNumber
+	 */
+	public int getCellNumber() {
+		return cellNumber;
+	}
+
+	/**
+	 * @param cellNumber the cellNumber to set
+	 */
+	public void setCellNumber(int cellNumber) {
+		this.cellNumber = cellNumber;
 	}
 
 	/**
