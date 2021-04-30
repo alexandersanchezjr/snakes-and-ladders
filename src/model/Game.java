@@ -33,7 +33,7 @@ public class Game {
 		rt = new RankingTree();
 		createGame(snakes, ladders);
 		assignRandomSymbols(players);
-		first.setPlayer(this.players);
+		searchFirstBoardCell(first).setPlayer(this.players);
 	}
 	
 	public Game (int rows, int columns, int snakes, int ladders, String players) {
@@ -42,7 +42,7 @@ public class Game {
 		rt = new RankingTree();
 		createGame(snakes, ladders);
 		assignSymbols(players, players.length());
-		first.setPlayer(this.players);
+		searchFirstBoardCell(first).setPlayer(this.players);
 	}
 
 	private void assignSymbols(String playersSymbols, int length){
@@ -73,12 +73,18 @@ public class Game {
 	
 	private void assignRandomSymbols(int numberOfPlayers) {
 		if(numberOfPlayers > 0) {
-			char symbol = generateRandomSymbol();
-			Player newPlayer = new Player (symbol);
-			if (!searchPlayer(newPlayer, players)) {
-				addPlayer(newPlayer, players);
-			}
+			createRandomPlayer (numberOfPlayers);
 			assignRandomSymbols(numberOfPlayers-1);
+		}
+	}
+	
+	private void createRandomPlayer (int numberOfPlayers) {
+		char symbol = generateRandomSymbol();
+		Player newPlayer = new Player (symbol);
+		if (!searchPlayer(newPlayer, players)) {
+			addPlayer(newPlayer, players);
+		}else {
+			createRandomPlayer (numberOfPlayers);
 		}
 	}
 	
@@ -197,7 +203,6 @@ public class Game {
 	private void includeLadders(int ladders) {
 		if (ladders > 0) {
 			createFirstLadder(false, ladders);
-			createSecondLadder (false, ladders);
 			includeLadders(ladders-1);
 		}
 	}
@@ -209,6 +214,8 @@ public class Game {
 			if (!firstCell.hasSnakeOrLadder()) {
 				firstCell.setLadder(ladders);
 				stop = true;
+				System.out.println("Escalera: " + ladders + "ubicada en: " + firstCell.getNumber());
+				createSecondLadder (false, ladders);
 			}
 			createFirstLadder (stop, ladders);
 		}
@@ -223,10 +230,9 @@ public class Game {
 			if (!secondCell.hasSnakeOrLadder()) {
 				secondCell.setLadder(ladders);
 				stop = true;
+				System.out.println("Escalera: " + ladders + "ubicada en: " + secondCell.getNumber());
 			}
-			if(!stop) {
-				createSecondLadder (!stop, ladders);
-			}
+			createSecondLadder (stop, ladders);
 		}
 	}
 	
