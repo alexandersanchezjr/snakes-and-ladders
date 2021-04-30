@@ -397,8 +397,18 @@ public class Game {
 		return rt.toString();
 	}
 	
-	public void movePlayer () {
-		
+	public void movePlayer (Player p, int diceValue) {
+		Cell c = searchCell(p.getCellNumber()+diceValue);
+		if(c.hasSnakeOrLadder()) {
+			if(c.getSnake() != 0) {
+				int cellNumber = searchSnake(c.getSnake, c.getNumber());
+				searchCell(cellNumber).setPlayer(p);
+				//TODO crear metodos para añadir o eliminar un jugador de la lista de jugadores de una celda
+			}else {
+				
+			}
+			p.increaseCont();
+		}
 	}
 	
 	public String boardToString() {
