@@ -35,6 +35,18 @@ public class Cell {
 		this.number = number;
 	}
 	/**
+	 * @return the snake
+	 */
+	public char getSnake() {
+		return snake;
+	}
+	/**
+	 * @return the ladder
+	 */
+	public int getLadder() {
+		return ladder;
+	}
+	/**
 	 * @param snake the snake to set
 	 */
 	public void setSnake(char snake) {
