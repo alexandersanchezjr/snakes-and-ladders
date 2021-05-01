@@ -66,6 +66,7 @@ public class Game {
 			 players = newPlayer;
 		 }else if (current.getRight() == null){
 			 current.setRight(newPlayer);
+			 newPlayer.setLeft(current);
 		 }else {
 			 addPlayer(newPlayer, current.getRight());
 		 }

@@ -7,6 +7,7 @@ public class Player {
 	private int score;
 	private int cellNumber;
 	private Player right;
+	private Player left;
 	
 	
 	/**
@@ -81,6 +82,20 @@ public class Player {
 	 */
 	public void setRight(Player right) {
 		this.right = right;
+	}
+
+	/**
+	 * @return the left
+	 */
+	public Player getLeft() {
+		return left;
+	}
+
+	/**
+	 * @param left the left to set
+	 */
+	public void setLeft(Player left) {
+		this.left = left;
 	}
 
 	public void increaseCont() {
