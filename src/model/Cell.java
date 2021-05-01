@@ -110,23 +110,19 @@ public class Cell {
 		down = d;
 	}
 	
-	public Player removePlayer (char symbol) {
-		Player p = searchPlayer(symbol, player);
-		if (p != null) {
-			
-		}
-		return player;
-	}
-	
-	private Player searchPlayer(char symbol, Player player) {
-		Player p = null;
+	public Player searchPlayer(Player playerToSearch) {
+		Player p = playerToSearch;
+		
+		
+		
+		
 		if(player != null) {
-			if (symbol == player.getSymbol()) {
+			if (playerToSearch == player) {
 				p = player;
 			}else if (player.getRight() != null) {
 				if (symbol == player.getRight().getSymbol()) {
 					p = player.getRight();
-				}else if (player.getRight().getRight() != null){
+				}else /*if (player.getRight().getRight() != null)*/{
 					p = searchPlayer(symbol, player.getRight());
 				}
 			}
