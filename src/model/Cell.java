@@ -110,6 +110,30 @@ public class Cell {
 		down = d;
 	}
 	
+	public Player removePlayer (char symbol) {
+		Player p = searchPlayer(symbol, player);
+		if (p != null) {
+			
+		}
+		return player;
+	}
+	
+	private Player searchPlayer(char symbol, Player player) {
+		Player p = null;
+		if(player != null) {
+			if (symbol == player.getSymbol()) {
+				p = player;
+			}else if (player.getRight() != null) {
+				if (symbol == player.getRight().getSymbol()) {
+					p = player.getRight();
+				}else if (player.getRight().getRight() != null){
+					p = searchPlayer(symbol, player.getRight());
+				}
+			}
+		}
+		return p;
+	}
+	
 	public String cellToString() {
 		if (snake != 0) 
 			return "[" + number + snake + "\t]";
