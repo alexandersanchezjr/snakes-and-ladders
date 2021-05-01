@@ -407,9 +407,8 @@ public class Game {
 		Cell c = searchCell(p.getCellNumber()+diceValue);
 		if(c.hasSnakeOrLadder()) {
 			if(c.getSnake() != 0) {
-				int cellNumber = searchSnake(c.getSnake(), c.getNumber());
+				int cellNumber = searchSnake(c.getSnake(), c.getNumber()-1, false);
 				searchCell(cellNumber).setPlayer(p);
-				//TODO crear metodos para añadir o eliminar un jugador de la lista de jugadores de una celda
 			}else {
 				
 			}
@@ -417,9 +416,18 @@ public class Game {
 		}
 	}
 	
-	private int searchSnake(char snake, int number) {
-		// TODO Auto-generated method stub
-		return 0;
+	private int searchSnake(char snake, int number, boolean found) {
+		Cell current = searchCell(number);
+		int currentNumber = 0;
+		if(!found) {
+			if(current.getSnake() == snake) {
+				currentNumber = current.getNumber();
+				found = true;
+			}else {
+				currentNumber = searchSnake(snake, number-1, found);
+			}
+		}
+		return currentNumber;
 	}
 
 	public String boardToString() {
