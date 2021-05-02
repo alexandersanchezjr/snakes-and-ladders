@@ -411,15 +411,51 @@ public class Game {
 		if(cellToAddPlayer.hasSnakeOrLadder()) {
 			if(cellToAddPlayer.getSnake() != 0) {
 				int cellNumber = searchSnake(cellToAddPlayer.getSnake(), cellToAddPlayer.getNumber());
-				Cell foundCell = searchCell(cellNumber);
-				foundCell.addPlayer(playerRemoved, foundCell.getPlayer());
+				if (cellNumber > 0) {
+					Cell foundCell = searchCell(cellNumber);
+					foundCell.addPlayer(playerRemoved, foundCell.getPlayer());
+				}else {
+					cellToAddPlayer.addPlayer(playerRemoved, cellToAddPlayer.getPlayer());
+				}
 			}else {
-				
+				int cellNumber = searchLadder(cellToAddPlayer.getLadder(), cellToAddPlayer.getNumber());
+				if (cellNumber > 0) {
+					Cell foundCell = searchCell(cellNumber);
+					foundCell.addPlayer(playerRemoved, foundCell.getPlayer());
+				}else {
+					cellToAddPlayer.addPlayer(playerRemoved, cellToAddPlayer.getPlayer());
+				}
 			}
 		}else {
 			cellToAddPlayer.addPlayer(playerRemoved, cellToAddPlayer.getPlayer());
 		}
 		playerRemoved.increaseCont();
+	}
+	
+	private int searchSnake(char snake, int number) {
+		int currentNumber = 0;
+		if(number > 0) {
+			Cell current = searchCell(number);
+			if(current.getSnake() == snake) {
+				currentNumber = current.getNumber();
+			}else {
+				currentNumber = searchSnake(snake, number - 1);
+			}
+		}
+		return currentNumber;
+	}
+	
+	private int searchLadder(int ladder, int number) {
+		int currentNumber = 0;
+		if(number <= (rows * columns)) {
+			Cell current = searchCell(number);
+			if(current.getLadder() == ladder) {
+				currentNumber = current.getNumber();
+			}else {
+				currentNumber = searchLadder(ladder, number + 1);
+			}
+		}
+		return currentNumber;
 	}
 	
 	private int searchSnake(char snake, int number, boolean found) {
