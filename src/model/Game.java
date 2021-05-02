@@ -422,9 +422,18 @@ public class Game {
 		playerRemoved.increaseCont();
 	}
 	
-	private int searchSnake(char snake, int number) {
-		// TODO Auto-generated method stub
-		return 0;
+	private int searchSnake(char snake, int number, boolean found) {
+		Cell current = searchCell(number);
+		int currentNumber = 0;
+		if(!found) {
+			if(current.getSnake() == snake) {
+				currentNumber = current.getNumber();
+				found = true;
+			}else {
+				currentNumber = searchSnake(snake, number-1, found);
+			}
+		}
+		return currentNumber;
 	}
 
 	public String boardToString() {
