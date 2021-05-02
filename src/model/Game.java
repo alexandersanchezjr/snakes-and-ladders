@@ -405,17 +405,21 @@ public class Game {
 	}
 	
 	public void movePlayer (Player p, int diceValue) {
-		Cell c = searchCell(p.getCellNumber()+diceValue);
-		if(c.hasSnakeOrLadder()) {
-			if(c.getSnake() != 0) {
-				int cellNumber = searchSnake(c.getSnake(), c.getNumber());
-				searchCell(cellNumber).setPlayer(p);
-				//TODO crear metodos para añadir o eliminar un jugador de la lista de jugadores de una celda
+		Cell cellToRemovePlayer = searchCell (p.getCellNumber());
+		Cell cellToAddPlayer = searchCell(p.getCellNumber() + diceValue);
+		Player playerRemoved = cellToRemovePlayer.removePlayer(p, cellToRemovePlayer.getPlayer());
+		if(cellToAddPlayer.hasSnakeOrLadder()) {
+			if(cellToAddPlayer.getSnake() != 0) {
+				int cellNumber = searchSnake(cellToAddPlayer.getSnake(), cellToAddPlayer.getNumber());
+				Cell foundCell = searchCell(cellNumber);
+				foundCell.addPlayer(playerRemoved, foundCell.getPlayer());
 			}else {
 				
 			}
-			p.increaseCont();
+		}else {
+			cellToAddPlayer.addPlayer(playerRemoved, cellToAddPlayer.getPlayer());
 		}
+		playerRemoved.increaseCont();
 	}
 	
 	private int searchSnake(char snake, int number) {
