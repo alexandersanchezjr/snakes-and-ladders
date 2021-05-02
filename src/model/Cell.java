@@ -110,24 +110,37 @@ public class Cell {
 		down = d;
 	}
 	
-	public Player searchPlayer(Player playerToSearch) {
-		Player p = playerToSearch;
+	public Player removePlayer (Player playerToRemove, Player first) {
+		Player removedPlayer = null;
 		
-		
-		
-		
-		if(player != null) {
-			if (playerToSearch == player) {
-				p = player;
-			}else if (player.getRight() != null) {
-				if (symbol == player.getRight().getSymbol()) {
-					p = player.getRight();
-				}else /*if (player.getRight().getRight() != null)*/{
-					p = searchPlayer(symbol, player.getRight());
-				}
+		if (playerToRemove == first) {
+			removedPlayer = first;
+			player = null;
+		}else if (first.getRight() != null) {
+			if(playerToRemove == first.getRight()) {
+				removedPlayer = first.getRight();
+				first.setRight(removedPlayer.getRight());
+				if (removedPlayer.getRight() != null) {
+					removedPlayer.getRight().setLeft(first);
+				}			
+				removedPlayer.setRight(null);
+				removedPlayer.setLeft(null);
 			}
+		}else {
+			removedPlayer = removePlayer (playerToRemove, first.getRight());
 		}
-		return p;
+		return removedPlayer;
+	}
+	
+	public void addPlayer (Player newPlayer, Player current) {
+		 if (current == null) {
+			 current = newPlayer;
+		 }else if (current.getRight() == null){
+			 current.setRight(newPlayer);
+			 newPlayer.setLeft(current);
+		 }else {
+			 addPlayer(newPlayer, current.getRight());
+		 }
 	}
 	
 	public String cellToString() {
