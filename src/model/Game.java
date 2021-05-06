@@ -20,6 +20,8 @@ public class Game {
 	private int rows;
 	private Player players;
 	
+	private Player turn;
+	
 	private int firstLadder;
 	private int secondLadder;
 	private int firstSnake;
@@ -404,7 +406,16 @@ public class Game {
 		return rt.toString();
 	}
 	
-	public void movePlayer (Player p, int diceValue) {
+	public void moveByTurn (int diceValue) {
+		if (turn == null) {
+			turn = players;
+		}else {
+			turn = players.getRight();
+		}
+		movePlayer (turn, diceValue);
+	}
+	
+	private void movePlayer (Player p, int diceValue) {
 		Cell cellToRemovePlayer = searchCell (p.getCellNumber());
 		Cell cellToAddPlayer = searchCell(p.getCellNumber() + diceValue);
 		Player playerRemoved = cellToRemovePlayer.removePlayer(p, cellToRemovePlayer.getPlayer());
@@ -414,20 +425,25 @@ public class Game {
 				if (cellNumber > 0) {
 					Cell foundCell = searchCell(cellNumber);
 					foundCell.addPlayer(playerRemoved, foundCell.getPlayer());
+					p.setCellNumber(cellNumber);
 				}else {
 					cellToAddPlayer.addPlayer(playerRemoved, cellToAddPlayer.getPlayer());
+					p.setCellNumber(cellToAddPlayer.getNumber());
 				}
 			}else {
 				int cellNumber = searchLadder(cellToAddPlayer.getLadder(), cellToAddPlayer.getNumber());
 				if (cellNumber > 0) {
 					Cell foundCell = searchCell(cellNumber);
 					foundCell.addPlayer(playerRemoved, foundCell.getPlayer());
+					p.setCellNumber(cellNumber);
 				}else {
 					cellToAddPlayer.addPlayer(playerRemoved, cellToAddPlayer.getPlayer());
+					p.setCellNumber(cellToAddPlayer.getNumber());
 				}
 			}
 		}else {
 			cellToAddPlayer.addPlayer(playerRemoved, cellToAddPlayer.getPlayer());
+			p.setCellNumber(cellToAddPlayer.getNumber());
 		}
 		playerRemoved.increaseCont();
 	}
@@ -458,19 +474,19 @@ public class Game {
 		return currentNumber;
 	}
 	
-	private int searchSnake(char snake, int number, boolean found) {
-		Cell current = searchCell(number);
-		int currentNumber = 0;
-		if(!found) {
-			if(current.getSnake() == snake) {
-				currentNumber = current.getNumber();
-				found = true;
-			}else {
-				currentNumber = searchSnake(snake, number-1, found);
-			}
-		}
-		return currentNumber;
-	}
+//	private int searchSnake(char snake, int number, boolean found) {
+//		Cell current = searchCell(number);
+//		int currentNumber = 0;
+//		if(!found) {
+//			if(current.getSnake() == snake) {
+//				currentNumber = current.getNumber();
+//				found = true;
+//			}else {
+//				currentNumber = searchSnake(snake, number-1, found);
+//			}
+//		}
+//		return currentNumber;
+//	}
 
 	public String boardToString() {
 		String msg;
