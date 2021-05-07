@@ -62,15 +62,18 @@ public class Menu {
 		
 		System.out.println(game.boardToString());
 		System.out.println("Esperando salto de linea para continuar...");
+		br.readLine();
+		System.out.println(game.gameToString());
+		System.out.println("Esperando salto de linea para continuar...");
 		playGame(br.readLine());
 		
 	}
 	
 	public void playGame(String input) throws IOException {
-		if(input.equals("\n")) {
+		if(input.equals("")) {
 			int diceValue = (int) (Math.random() * 6 + 1);
 			game.moveByTurn(diceValue);
-			System.out.println("El judador " + game.getTurn() + " ha lanzado el dado y obtuvo el puntaje " + diceValue);
+			System.out.println("El judador " + game.getTurn().getSymbol() + " ha lanzado el dado y obtuvo el puntaje " + diceValue);
 			System.out.println(game.gameToString());
 			if (game.hasWinner()) {
 				System.out.println("El jugador " + game.getTurn() + " ha ganado el juego, con " + game.getTurn().getCont() + " movimientos");
