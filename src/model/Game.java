@@ -40,6 +40,7 @@ public class Game {
 		createGame(snakes, ladders);
 		assignRandomSymbols(players);
 		searchFirstBoardCell(first).setPlayer(this.players);
+		System.out.println(searchFirstBoardCell(first).getPlayer());
 	}
 	
 	public Game (int rows, int columns, int snakes, int ladders, String players) {
@@ -456,12 +457,15 @@ public class Game {
 			cellToAddPlayer = searchCell(newCellNumber);
 		}
 		Player playerRemoved = cellToRemovePlayer.removePlayer(p, cellToRemovePlayer.getPlayer());
+		System.out.println(playerRemoved);
+		System.out.println(p);
 		if(cellToAddPlayer.hasSnakeOrLadder()) {
 			if(cellToAddPlayer.getSnake() != 0) {
 				int cellNumber = searchSnake(cellToAddPlayer.getSnake(), cellToAddPlayer.getNumber() - 1);
 				if (cellNumber > 0) {
 					Cell foundCell = searchCell(cellNumber);
 					foundCell.addPlayer(playerRemoved, foundCell.getPlayer());
+//					System.out.println(foundCell.getPlayer());
 					p.setCellNumber(cellNumber);
 				}else {
 					cellToAddPlayer.addPlayer(playerRemoved, cellToAddPlayer.getPlayer());
@@ -472,6 +476,7 @@ public class Game {
 				if (cellNumber > 0) {
 					Cell foundCell = searchCell(cellNumber);
 					foundCell.addPlayer(playerRemoved, foundCell.getPlayer());
+//					System.out.println(foundCell.getPlayer());
 					p.setCellNumber(cellNumber);
 				}else {
 					cellToAddPlayer.addPlayer(playerRemoved, cellToAddPlayer.getPlayer());
@@ -482,6 +487,7 @@ public class Game {
 			cellToAddPlayer.addPlayer(playerRemoved, cellToAddPlayer.getPlayer());
 			p.setCellNumber(cellToAddPlayer.getNumber());
 		}
+//		System.out.println(cellToAddPlayer.getPlayer());
 		playerRemoved.increaseCont();
 	}
 	
