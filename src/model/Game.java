@@ -18,6 +18,8 @@ public class Game {
 	private Cell first;
 	private int columns;
 	private int rows;
+	private int snakes;
+	private int ladders;
 	private Player players;
 	
 	private Player turn;
@@ -32,6 +34,8 @@ public class Game {
 	public Game (int rows, int columns, int snakes, int ladders, int players) {
 		this.columns = columns;
 		this.rows = rows;
+		this.snakes = snakes;
+		this.ladders = ladders;
 		rt = new RankingTree();
 		createGame(snakes, ladders);
 		assignRandomSymbols(players);
@@ -45,6 +49,13 @@ public class Game {
 		createGame(snakes, ladders);
 		assignSymbols(players, players.length());
 		searchFirstBoardCell(first).setPlayer(this.players);
+	}
+
+	/**
+	 * @return the turn
+	 */
+	public Player getTurn() {
+		return turn;
 	}
 
 	private void assignSymbols(String playersSymbols, int length){
@@ -84,56 +95,56 @@ public class Game {
 	private void createRandomPlayer (int numberOfPlayers) {
 		char symbol = generateRandomSymbol();
 		Player newPlayer = new Player (symbol);
-		if (!searchPlayer(newPlayer, players)) {
+		if (searchPlayer(newPlayer, players) == null) {
 			addPlayer(newPlayer, players);
 		}else {
 			createRandomPlayer (numberOfPlayers);
 		}
 	}
 	
-	private boolean searchPlayer (Player player, Player current) {
-		boolean found = false;
+	private Player searchPlayer (Player player, Player current) {
+		Player p = null;
 		if (current != null) {
 			if (player.getSymbol() == current.getSymbol()) {
-				found = true;
+				p = current;
 			}else {
-				found = searchPlayer (player, current.getRight());
+				p = searchPlayer (player, current.getRight());
 			}
 		}
-		return found;
+		return p;
 	}
 	
 	private char generateRandomSymbol() {
 		char symbol = 0;
-		int symbolNumber = (int) ((Math.random() * (9-1)) +1);
+		int symbolNumber = (int) (Math.random() * 9 +1);
 		switch(symbolNumber) {
-		case 1:
-			symbol = ASTERISK;
-			break;
-		case 2:
-			symbol = EXCLAMATION;
-			break;
-		case 3:
-			symbol = UPPER_CASE_O;
-			break;
-		case 4:
-			symbol = UPPER_CASE_X;
-			break;
-		case 5:
-			symbol = PERCENTAGE;
-			break;
-		case 6:
-			symbol = DOLLAR;
-			break;
-		case 7:
-			symbol = HASH;
-			break;
-		case 8:
-			symbol = PLUS;
-			break;
-		case 9:
-			symbol = AMPERSAND;
-			break;
+			case 1:
+				symbol = ASTERISK;
+				break;
+			case 2:
+				symbol = EXCLAMATION;
+				break;
+			case 3:
+				symbol = UPPER_CASE_O;
+				break;
+			case 4:
+				symbol = UPPER_CASE_X;
+				break;
+			case 5:
+				symbol = PERCENTAGE;
+				break;
+			case 6:
+				symbol = DOLLAR;
+				break;
+			case 7:
+				symbol = HASH;
+				break;
+			case 8:
+				symbol = PLUS;
+				break;
+			case 9:
+				symbol = AMPERSAND;
+				break;
 		}
 		return symbol;
 	}
@@ -212,7 +223,7 @@ public class Game {
 	
 	private void createFirstLadder (boolean stop, int ladders) {
 		if (!stop) {
-			firstLadder = (int) ((Math.random() * ((rows*columns)-2)) + 2);
+			firstLadder = (int) ((Math.random() * (rows*columns)-1) + 2);
 			Cell firstCell = searchCell(firstLadder);
 			if (!firstCell.hasSnakeOrLadder() && rowHaSameLadder(firstCell, firstCell.getLadder())) {
 				firstCell.setLadder(ladders);
@@ -227,7 +238,7 @@ public class Game {
 	private void createSecondLadder (boolean stop, int ladders) {
 
 		if (!stop) {
-			secondLadder = (int) ((Math.random() * ((rows*columns)-2)) + 2);
+			secondLadder = (int) ((Math.random() * ((rows*columns)-1)) + 2);
 			Cell secondCell = searchCell(secondLadder);
 			if (!secondCell.hasSnakeOrLadder() && rowHaSameLadder(secondCell, secondCell.getLadder())) {
 				secondCell.setLadder(ladders);
@@ -402,6 +413,26 @@ public class Game {
 		
 	}
 	
+	private String playersToString (Player current) {
+		String message = "";
+		if (current != null) {
+			message += current.getSymbol();
+			message += playersToString (current.getRight());
+		}
+		return message;
+	}
+	
+	public void addWinner (String nickname) {
+		String symbols = playersToString(players);
+		int numberOfPlayers = symbols.length();
+		rt.addWinner(nickname, getWinner().getScore(), columns, rows, snakes, ladders, numberOfPlayers, symbols);
+	}
+	
+	private Player getWinner () {
+		Player p = searchPlayer (searchCell(rows * columns).getPlayer(), players);
+		return p;
+	}
+	
 	public String showRankingTree() {
 		return rt.toString();
 	}
@@ -417,11 +448,17 @@ public class Game {
 	
 	private void movePlayer (Player p, int diceValue) {
 		Cell cellToRemovePlayer = searchCell (p.getCellNumber());
-		Cell cellToAddPlayer = searchCell(p.getCellNumber() + diceValue);
+		Cell cellToAddPlayer = null;
+		int newCellNumber = p.getCellNumber() + diceValue;
+		if (newCellNumber > rows * columns) {
+			cellToAddPlayer = searchCell(rows * columns);
+		}else {
+			cellToAddPlayer = searchCell(newCellNumber);
+		}
 		Player playerRemoved = cellToRemovePlayer.removePlayer(p, cellToRemovePlayer.getPlayer());
 		if(cellToAddPlayer.hasSnakeOrLadder()) {
 			if(cellToAddPlayer.getSnake() != 0) {
-				int cellNumber = searchSnake(cellToAddPlayer.getSnake(), cellToAddPlayer.getNumber());
+				int cellNumber = searchSnake(cellToAddPlayer.getSnake(), cellToAddPlayer.getNumber() - 1);
 				if (cellNumber > 0) {
 					Cell foundCell = searchCell(cellNumber);
 					foundCell.addPlayer(playerRemoved, foundCell.getPlayer());
@@ -431,7 +468,7 @@ public class Game {
 					p.setCellNumber(cellToAddPlayer.getNumber());
 				}
 			}else {
-				int cellNumber = searchLadder(cellToAddPlayer.getLadder(), cellToAddPlayer.getNumber());
+				int cellNumber = searchLadder(cellToAddPlayer.getLadder(), cellToAddPlayer.getNumber() + 1);
 				if (cellNumber > 0) {
 					Cell foundCell = searchCell(cellNumber);
 					foundCell.addPlayer(playerRemoved, foundCell.getPlayer());
@@ -446,6 +483,14 @@ public class Game {
 			p.setCellNumber(cellToAddPlayer.getNumber());
 		}
 		playerRemoved.increaseCont();
+	}
+	
+	public boolean hasWinner() {
+		if (searchCell(rows * columns).getPlayer() != null) {
+			return true;
+		}else {
+			return false;
+		}
 	}
 	
 	private int searchSnake(char snake, int number) {
