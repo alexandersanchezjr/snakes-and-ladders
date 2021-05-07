@@ -3,6 +3,8 @@ package ui;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import model.Game;
 
@@ -65,22 +67,68 @@ public class Menu {
 	}
 	
 	public void playGame(String input) throws IOException {
-		if(!input.equals(MENU) && !input.equals(SIMULATION) && !input.equals(SHOW_ORIGINAL_BOARD)) {
+		if(input.equals("\n")) {
+			int diceValue = (int) (Math.random() * 6 + 1);
+			game.moveByTurn(diceValue);
+			System.out.println("El judador " + game.getTurn() + " ha lanzado el dado y obtuvo el puntaje " + diceValue);
 			System.out.println(game.gameToString());
-			playGame(br.readLine());
+			if (game.hasWinner()) {
+				System.out.println("El jugador " + game.getTurn() + " ha ganado el juego, con " + game.getTurn().getCont() + " movimientos");
+				System.out.print("Nickname: ");
+				String nickname = br.readLine();
+				game.addWinner(nickname);		
+			}else {
+				System.out.println("Esperando salto de linea para continuar...");
+				playGame(br.readLine());
+			}
 		}else if(input.equals(MENU)) {
 			startProgram();
 		}else if(input.equals(SIMULATION)) {
-			playGame("");
+			startSimulation();
 		}else if(input.equals(SHOW_ORIGINAL_BOARD)) {
 			System.out.println(game.boardToString());
+			System.out.println("Esperando salto de linea para continuar...");
+			playGame(br.readLine());
+		}else {
+			System.out.println("Ingrese un comando válido");
 			System.out.println("Esperando salto de linea para continuar...");
 			playGame(br.readLine());
 		}
 	}
 	
+	public void startSimulation () {
+    	Timer timer = new Timer();
+    	timer.schedule(new TimerTask() {
+    	  @Override
+    	  public void run() {
+    		  int diceValue = (int) (Math.random() * 6 + 1);
+    		  game.moveByTurn(diceValue);
+    		  System.out.println("El judador " + game.getTurn() + " ha lanzado el dado y obtuvo el puntaje " + diceValue);
+    		  System.out.println(game.gameToString());
+    		  if (game.hasWinner()) {
+    			  System.out.println("El jugador " + game.getTurn() + " ha ganado el juego, con " + game.getTurn().getCont() + " movimientos");
+    			  System.out.print("Nickname: ");
+    			  String nickname = "Computadora";
+    			  try {
+    				  nickname = br.readLine();
+    			  } catch (IOException e) {
+						// TODO Auto-generated catch block
+    				  e.printStackTrace();
+    			  }
+    			  game.addWinner(nickname);	
+    			  cancel();
+    		  }
+    	  }
+    	}, 0, 2000);
+		
+	}
+	
 	public void showRankingBoard() {
-		System.out.println(game.showRankingTree());
+		if (game == null) {
+			System.out.println("No se ha iniciado algún juego. Empiece un nuevo juego");
+		}else {
+			System.out.println(game.showRankingTree());
+		}
 	}
 	
 	public void doOperation(int choice) {
