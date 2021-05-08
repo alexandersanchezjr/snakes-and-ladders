@@ -110,41 +110,55 @@ public class Cell {
 		down = d;
 	}
 	
-	public Player removePlayer (Player playerToRemove, Player current) {
-		Player removedPlayer = null;
+	public void removePlayer (Player playerToRemove, Player current) {
 		if (playerToRemove == player) {
-			removedPlayer = player;
-			player = removedPlayer.getRight();
-			if (removedPlayer.getRight() != null) {
-				removedPlayer.getRight().setLeft(null);
-			}			
-			removedPlayer.setRight(null);
-			removedPlayer.setLeft(null);
+			player = player.getRight();
+			if (player != null) {
+				player.setLeft(null);
+			}
 		}else if (current != null) {
 			if(playerToRemove == current) {
-				removedPlayer = current;
-				current.setRight(removedPlayer.getRight());
-				if (removedPlayer.getRight() != null) {
-					removedPlayer.getRight().setLeft(current);
+				Player left = current.getLeft();
+				current = current.getRight();
+				if (current != null) {
+					current.setLeft(left);
 				}			
-				removedPlayer.setRight(null);
-				removedPlayer.setLeft(null);
 			}else {
-				removedPlayer = removePlayer (playerToRemove, current.getRight());
+				removePlayer (playerToRemove, current.getRight());
 			}
 		}
-		return removedPlayer;
 	}
 	
-	public void addPlayer (Player newPlayer, Player current) {
-		 if (current == null) {
-			 current = newPlayer;
-		 }else if (current.getRight() == null){
-			 current.setRight(newPlayer);
-			 newPlayer.setLeft(current);
-		 }else {
-			 addPlayer(newPlayer, current.getRight());
-		 }
+//	public void addPlayer (Player newPlayer, Player current) {
+//		 if (current == null) {
+//			 current = newPlayer;
+//		 }else if (current.getRight() == null){
+//			 current.setRight(newPlayer);
+//			 newPlayer.setLeft(current);
+//		 }else {
+//			 addPlayer(newPlayer, current.getRight());
+//		 }
+//	}
+	
+	public void addPlayer(Player newPlayer) {
+		if(player == null) {
+			player = newPlayer;
+		}else {
+			addPlayer (newPlayer, player);
+		}
+
+	}
+	
+	private void addPlayer (Player newPlayer, Player current) {
+		
+		if(current.getRight() == null) {
+			current.setRight(newPlayer);
+			newPlayer.setLeft(current);
+		}else {
+			current = current.getRight();
+			addPlayer(newPlayer, current);
+		}
+		
 	}
 	
 	public String cellToString() {
