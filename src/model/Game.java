@@ -39,7 +39,9 @@ public class Game {
 		rt = new RankingTree();
 		createGame(snakes, ladders);
 		assignRandomSymbols(players);
-		searchFirstBoardCell(first).setPlayer(this.players);
+		System.out.println("Primer jugador: " + this.players + " segundo jugador: " + this.players.getRight());
+		Player boardPlayers = this.players;
+		searchFirstBoardCell(first).setPlayer(boardPlayers);
 	}
 	
 	public Game (int rows, int columns, int snakes, int ladders, String players) {
@@ -48,7 +50,8 @@ public class Game {
 		rt = new RankingTree();
 		createGame(snakes, ladders);
 		assignSymbols(players, players.length());
-		searchFirstBoardCell(first).setPlayer(this.players);
+		Player boardPlayers = this.players;
+		searchFirstBoardCell(first).setPlayer(boardPlayers);	
 	}
 
 	/**
@@ -223,7 +226,7 @@ public class Game {
 	
 	private void createFirstLadder (boolean stop, int ladders) {
 		if (!stop) {
-			firstLadder = (int) ((Math.random() * (rows*columns)-1) + 2);
+			firstLadder = (int) ((Math.random() * ((rows*columns)-2)) + 2);
 			Cell firstCell = searchCell(firstLadder);
 			if (!firstCell.hasSnakeOrLadder() && rowHaSameLadder(firstCell, firstCell.getLadder())) {
 				firstCell.setLadder(ladders);
@@ -238,7 +241,7 @@ public class Game {
 	private void createSecondLadder (boolean stop, int ladders) {
 
 		if (!stop) {
-			secondLadder = (int) ((Math.random() * ((rows*columns)-1)) + 2);
+			secondLadder = (int) ((Math.random() * ((rows*columns)-2)) + 2);
 			Cell secondCell = searchCell(secondLadder);
 			if (!secondCell.hasSnakeOrLadder() && rowHaSameLadder(secondCell, secondCell.getLadder())) {
 				secondCell.setLadder(ladders);
@@ -438,13 +441,20 @@ public class Game {
 	}
 	
 	public void moveByTurn (int diceValue) {
+//		System.out.println("Entra: " + turn);
+
 		if (turn == null) {
 			turn = players;
+//			System.out.println("Segundo jugador: " + turn.getRight());
 		}else {
-			turn = players.getRight();
-			System.out.println(turn);
+//			System.out.println("Segundo jugador: " + turn.getRight());
+			turn = turn.getRight();
+			if (turn == null) {
+				moveByTurn(diceValue);
+			}
+//			System.out.println(turn);
 		}
-		System.out.println(turn);
+//		System.out.println("Sale: " + turn);
 		movePlayer (turn, diceValue);
 	}
 	
@@ -457,34 +467,51 @@ public class Game {
 		}else {
 			cellToAddPlayer = searchCell(newCellNumber);
 		}
-		Player playerRemoved = cellToRemovePlayer.removePlayer(p, cellToRemovePlayer.getPlayer());
+		cellToRemovePlayer.removePlayer(p, cellToRemovePlayer.getPlayer());
+		Player playerToAdd = p;
+		playerToAdd.setRight(null);
+		playerToAdd.setLeft(null);
 		if(cellToAddPlayer.hasSnakeOrLadder()) {
 			if(cellToAddPlayer.getSnake() != 0) {
 				int cellNumber = searchSnake(cellToAddPlayer.getSnake(), cellToAddPlayer.getNumber() - 1);
 				if (cellNumber > 0) {
 					Cell foundCell = searchCell(cellNumber);
-					foundCell.addPlayer(playerRemoved, foundCell.getPlayer());
+
+					foundCell.addPlayer(playerToAdd);
 					p.setCellNumber(cellNumber);
+//					System.out.println("Pasó por una serpiente y baja a la casilla: " + p.getCellNumber());
+					System.out.println("En la celda: " + foundCell.getNumber() + " están los jugadores: " + foundCell.getPlayer());
+
 				}else {
-					cellToAddPlayer.addPlayer(playerRemoved, cellToAddPlayer.getPlayer());
+					cellToAddPlayer.addPlayer(playerToAdd);
 					p.setCellNumber(cellToAddPlayer.getNumber());
+//					System.out.println("Se mueve a la casilla: " + p.getCellNumber());
+					System.out.println("En la celda: " + cellToAddPlayer.getNumber() + " están los jugadores: " + cellToAddPlayer.getPlayer() + ", " + cellToAddPlayer.getPlayer().getRight());
 				}
 			}else {
 				int cellNumber = searchLadder(cellToAddPlayer.getLadder(), cellToAddPlayer.getNumber() + 1);
 				if (cellNumber > 0) {
 					Cell foundCell = searchCell(cellNumber);
-					foundCell.addPlayer(playerRemoved, foundCell.getPlayer());
+					System.out.println("Nueva celda con escalera: " + foundCell);
+					foundCell.addPlayer(playerToAdd);
 					p.setCellNumber(cellNumber);
+//					System.out.println("Pasó por una escalera y sube a la casilla: " + p.getCellNumber());
+					System.out.println("En la celda: " + foundCell.getNumber() + " están los jugadores: " + foundCell.getPlayer());
 				}else {
-					cellToAddPlayer.addPlayer(playerRemoved, cellToAddPlayer.getPlayer());
+					cellToAddPlayer.addPlayer(playerToAdd);
 					p.setCellNumber(cellToAddPlayer.getNumber());
+//					System.out.println("Se mueve a la casilla: " + p.getCellNumber());
+					System.out.println("En la celda: " + cellToAddPlayer.getNumber() + " están los jugadores: " + cellToAddPlayer.getPlayer());
 				}
 			}
 		}else {
-			cellToAddPlayer.addPlayer(playerRemoved, cellToAddPlayer.getPlayer());
+			cellToAddPlayer.addPlayer(playerToAdd);
 			p.setCellNumber(cellToAddPlayer.getNumber());
+//			System.out.println("Se mueve a la casilla: " + p.getCellNumber());
+			System.out.println("En la celda: " + cellToAddPlayer.getNumber() + " están los jugadores: " + cellToAddPlayer.getPlayer());
 		}
-		playerRemoved.increaseCont();
+		p.increaseCont();
+//		System.out.println("Movimientos de " + p + ": " + p.getCont());
 	}
 	
 	public boolean hasWinner() {
