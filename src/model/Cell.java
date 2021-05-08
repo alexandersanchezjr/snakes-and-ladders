@@ -110,24 +110,28 @@ public class Cell {
 		down = d;
 	}
 	
-	public Player removePlayer (Player playerToRemove, Player first) {
+	public Player removePlayer (Player playerToRemove, Player current) {
 		Player removedPlayer = null;
-		
-		if (playerToRemove == first) {
-			removedPlayer = first;
-			player = null;
-		}else if (first.getRight() != null) {
-			if(playerToRemove == first.getRight()) {
-				removedPlayer = first.getRight();
-				first.setRight(removedPlayer.getRight());
+		if (playerToRemove == player) {
+			removedPlayer = player;
+			player = removedPlayer.getRight();
+			if (removedPlayer.getRight() != null) {
+				removedPlayer.getRight().setLeft(null);
+			}			
+			removedPlayer.setRight(null);
+			removedPlayer.setLeft(null);
+		}else if (current != null) {
+			if(playerToRemove == current) {
+				removedPlayer = current;
+				current.setRight(removedPlayer.getRight());
 				if (removedPlayer.getRight() != null) {
-					removedPlayer.getRight().setLeft(first);
+					removedPlayer.getRight().setLeft(current);
 				}			
 				removedPlayer.setRight(null);
 				removedPlayer.setLeft(null);
+			}else {
+				removedPlayer = removePlayer (playerToRemove, current.getRight());
 			}
-		}else {
-			removedPlayer = removePlayer (playerToRemove, first.getRight());
 		}
 		return removedPlayer;
 	}
