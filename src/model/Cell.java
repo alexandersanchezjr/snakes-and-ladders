@@ -5,6 +5,7 @@ public class Cell {
 	private char snake;
 	private int ladder;
 	private Player player;
+	private String info;
 	
 	private Cell right;
 	private Cell left;
@@ -19,7 +20,7 @@ public class Cell {
 //	}
 	
 	public Cell () {
-		
+		info = "";
 	}
 	/**
 	 * @return the number
@@ -78,6 +79,17 @@ public class Cell {
 		this.player = player;
 	}
 	
+	/**
+	 * @return the info
+	 */
+	public String getInfo() {
+		return info;
+	}
+
+	public void setInfo(String info) {
+		this.info = info;
+	}
+
 	public Cell getRight() {
 		return right;
 	}
@@ -110,55 +122,16 @@ public class Cell {
 		down = d;
 	}
 	
-	public void removePlayer (Player playerToRemove, Player current) {
-		if (playerToRemove == player) {
-			player = player.getRight();
-			if (player != null) {
-				player.setLeft(null);
-			}
-		}else if (current != null) {
-			if(playerToRemove == current) {
-				Player left = current.getLeft();
-				current = current.getRight();
-				if (current != null) {
-					current.setLeft(left);
-				}			
-			}else {
-				removePlayer (playerToRemove, current.getRight());
-			}
-		}
+	public void removePlayer (char symbol) {
+		char nullChar = 0;
+		info = info.replace(symbol, nullChar);
 	}
-	
-//	public void addPlayer (Player newPlayer, Player current) {
-//		 if (current == null) {
-//			 current = newPlayer;
-//		 }else if (current.getRight() == null){
-//			 current.setRight(newPlayer);
-//			 newPlayer.setLeft(current);
-//		 }else {
-//			 addPlayer(newPlayer, current.getRight());
-//		 }
-//	}
-	
-	public void addPlayer(Player newPlayer) {
-		if(player == null) {
-			player = newPlayer;
-		}else {
-			addPlayer (newPlayer, player);
-		}
 
-	}
-	
-	private void addPlayer (Player newPlayer, Player current) {
-		
-		if(current.getRight() == null) {
-			current.setRight(newPlayer);
-			newPlayer.setLeft(current);
-		}else {
-			current = current.getRight();
-			addPlayer(newPlayer, current);
-		}
-		
+	/**
+	 * @param info the info to set
+	 */
+	public void addPlayer(char info) {
+		this.info += info;
 	}
 	
 	public String cellToString() {
@@ -173,20 +146,12 @@ public class Cell {
 	
 	public String gameToString () {
 		if (snake != 0) 
-			return "[" + snake + playersToString () + "\t]";
+			return "[" + snake + info + "\t]";
 		else if (ladder != 0)
-			return "[" + ladder + playersToString () + "\t]";
-		else if (player != null)
-			return "[" + playersToString () + "\t]";
+			return "[" + ladder + info + "\t]";
+		else if (info != "")
+			return "[" + info + "\t]";
 		else
 			return "[\t]";
-	}
-	
-	private String playersToString () {
-		String playersString = "";
-		if (player != null) {
-			playersString = player.toString(player);
-		}
-		return playersString;
 	}
 }
