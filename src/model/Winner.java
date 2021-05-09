@@ -177,11 +177,11 @@ public class Winner {
 		    /* first recur on left child */
 		    msg += toString(w.left);
 		    /* then print the data of node */
-		    msg += "Nombre: " + nickname + 
+		    msg += "\nNombre: " + nickname + 
 		    		"\nPuntaje: " +  score + 
 		    		"\nDimensión tablero: " + columns + "x" + rows + 
 		    		"\nSerpientes: " + snakes + 
-		    		"\nEscaleras" + ladders + 
+		    		"\nEscaleras: " + ladders + 
 		    		"\nNumero de jugadores: " + players + 
 		    		"\nSimbolos de jugadores: " + symbols + "\n\n";
 		    msg += "=================================================\n\n";
