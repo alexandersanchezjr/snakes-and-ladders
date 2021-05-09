@@ -101,13 +101,5 @@ public class Player {
 	public void increaseCont() {
 		cont++;
 	}
-	
-	public String toString (Player right) {
-		String message = "";
-		if (right.getRight() == null)
-			message += right.getSymbol();
-		else 
-			message = right.getSymbol() + toString(right.getRight());
-		return message;
-	}
+
 }
