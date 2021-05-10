@@ -30,32 +30,26 @@ public class Game {
 	private int firstSnake;
 	private int secondSnake;
 	
-	private RankingTree rt;
 	
 	public Game (int rows, int columns, int snakes, int ladders, int players) {
 		this.columns = columns;
 		this.rows = rows;
 		this.snakes = snakes;
 		this.ladders = ladders;
-		rt = new RankingTree();
 		createGame(snakes, ladders);
 		assignRandomSymbols(players);
 		symbols = playersToString(this.players);
-//		Player boardPlayers = this.players;
-//		searchFirstBoardCell(first).setPlayer(boardPlayers);
-		searchFirstBoardCell(first).setInfo(symbols);
+		searchFirstBoardCell(first).setInfo(getSymbols());
 	}
 	
 	public Game (int rows, int columns, int snakes, int ladders, String players) {
 		this.columns = columns;
 		this.rows = rows;
-		rt = new RankingTree();
 		createGame(snakes, ladders);
-		assignSymbols(players, players.length());
+		assignSymbols(players, players.length() - 1);
 		symbols = playersToString(this.players);
-//		Player boardPlayers = this.players;
-//		searchFirstBoardCell(first).setPlayer(boardPlayers);	
-		searchFirstBoardCell(first).setInfo(symbols);
+		System.out.println(getSymbols());
+		searchFirstBoardCell(first).setInfo(getSymbols());
 	}
 
 	/**
@@ -65,9 +59,44 @@ public class Game {
 		return turn;
 	}
 
+	/**
+	 * @return the symbols
+	 */
+	public String getSymbols() {
+		return symbols;
+	}
+
+	/**
+	 * @return the columns
+	 */
+	public int getColumns() {
+		return columns;
+	}
+
+	/**
+	 * @return the rows
+	 */
+	public int getRows() {
+		return rows;
+	}
+
+	/**
+	 * @return the snakes
+	 */
+	public int getSnakes() {
+		return snakes;
+	}
+
+	/**
+	 * @return the ladders
+	 */
+	public int getLadders() {
+		return ladders;
+	}
+
 	private void assignSymbols(String playersSymbols, int length){
-		if (length > 0) {
-			assignSymbols(playersSymbols, length--);
+		if (length >= 0) {
+			assignSymbols(playersSymbols, length-1);
 			Player newPlayer = new Player (playersSymbols.charAt(length));
 			addPlayer(newPlayer, players);
 		}
@@ -159,7 +188,7 @@ public class Game {
 
 	private void createRow(int i, int j, Cell currentFirstRow) {
 		createColumn(i,j+1,currentFirstRow,currentFirstRow.getDown());
-		if(i+1 < rows) {
+		if(i+1 < getRows()) {
 			Cell downFirstRow = new Cell();
 			downFirstRow.setUp(currentFirstRow);
 			currentFirstRow.setDown(downFirstRow);
@@ -168,7 +197,7 @@ public class Game {
 	}
 
 	private void createColumn(int i, int j, Cell previous, Cell previuousRow) {	
-		if(j < columns) {
+		if(j < getColumns()) {
 			Cell current = new Cell ();
 			current.setLeft(previous);
 			previous.setRight(current);
@@ -185,13 +214,13 @@ public class Game {
 	
 	private void numberCells () {
 		Cell firstBoardCell = searchFirstBoardCell(first);
-		numberCellsToRight (2, columns + 1 , firstBoardCell);
+		numberCellsToRight (2, getColumns() + 1 , firstBoardCell);
 	}
 	
 	private void numberCellsToRight (int i, int j, Cell current) {
 		if (current != null) {
 			numberCellsToRight(i, j + 1, current.getRight());
-			current.setNumber(j - columns);
+			current.setNumber(j - getColumns());
 			if (current.getUp() != null && current.getLeft() == null) {
 				Cell currentUp = current.getUp();
 				numberCellsToLeft(i + 1, j - 1, currentUp);
@@ -202,10 +231,10 @@ public class Game {
 	private void numberCellsToLeft (int i, int j, Cell current) {
 		if (current != null)  {
 			numberCellsToLeft(i, j - 1, current.getRight());
-			current.setNumber(j + columns);
+			current.setNumber(j + getColumns());
 			if (current.getUp() != null && current.getLeft() == null){
 				Cell currentUp = current.getUp();
-				numberCellsToRight (i + 1, (i*columns) + 1, currentUp);
+				numberCellsToRight (i + 1, (i*getColumns()) + 1, currentUp);
 			}
 		}
 		
@@ -231,7 +260,7 @@ public class Game {
 	
 	private void createFirstLadder (boolean stop, int ladders) {
 		if (!stop) {
-			firstLadder = (int) ((Math.random() * ((rows*columns)-2)) + 2);
+			firstLadder = (int) ((Math.random() * ((getRows()*getColumns())-2)) + 2);
 			Cell firstCell = searchCell(firstLadder);
 			if (!firstCell.hasSnakeOrLadder() && !rowHasSameLadder(firstCell, ladders)) {
 				firstCell.setLadder(ladders);
@@ -245,7 +274,7 @@ public class Game {
 	private void createSecondLadder (boolean stop, int ladders) {
 
 		if (!stop) {
-			secondLadder = (int) ((Math.random() * ((rows*columns)-2)) + 2);
+			secondLadder = (int) ((Math.random() * ((getRows()*getColumns())-2)) + 2);
 			Cell secondCell = searchCell(secondLadder);
 			if (!secondCell.hasSnakeOrLadder() && !rowHasSameLadder(secondCell, ladders)) {
 				secondCell.setLadder(ladders);
@@ -302,7 +331,7 @@ public class Game {
 	
 	private void createFirstSnake (boolean stop, int snakes) {
 		if (stop != true) {
-			firstSnake = (int) ((Math.random() * ((rows*columns)-1)) + 1);
+			firstSnake = (int) ((Math.random() * ((getRows()*getColumns())-1)) + 1);
 			Cell firstCell = searchCell(firstSnake);
 			char snakeLetter = (char)(64 + snakes);
 			if (!firstCell.hasSnakeOrLadder() && !rowHasSameSnake(firstCell, snakeLetter)) {
@@ -315,7 +344,7 @@ public class Game {
 	
 	private void createSecondSnake (boolean stop, int snakes) {
 		if (stop != true) {
-			secondSnake = (int) ((Math.random() * ((rows*columns)-1)) + 1);
+			secondSnake = (int) ((Math.random() * ((getRows()*getColumns())-1)) + 1);
 			Cell secondCell = searchCell(secondSnake);
 			char snakeLetter = (char)(64 + snakes);
 			if (!secondCell.hasSnakeOrLadder() && !rowHasSameSnake(secondCell, snakeLetter)) {
@@ -370,12 +399,12 @@ public class Game {
 
 	private Cell searchCellInRow (int i, int j, int cellNumber, Cell currentFirstRow) {
 		Cell cell = null;
-		if (i < rows) {
+		if (i < getRows()) {
 			if (currentFirstRow.getNumber() == cellNumber)
 				cell = currentFirstRow;
 			else {
 				cell = searchCellInColumn(i, j+1, cellNumber, currentFirstRow.getRight());
-				if(i+1 < rows && cell == null) {				
+				if(i+1 < getRows() && cell == null) {				
 					cell = searchCellInRow(i+1, j, cellNumber, currentFirstRow.getDown());
 				}
 			}	
@@ -385,10 +414,10 @@ public class Game {
 
 	private Cell searchCellInColumn(int i, int j, int cellNumber, Cell currentColumn) {
 		Cell cell = null;
-		if (j < columns) {
+		if (j < getColumns()) {
 			if (currentColumn.getNumber() == cellNumber)
 				cell = currentColumn;
-			else if(j < columns && currentColumn.getRight() !=null) {
+			else if(j < getColumns() && currentColumn.getRight() !=null) {
 				cell = searchCellInColumn(i, j+1, cellNumber, currentColumn.getRight());
 			}
 		}
@@ -404,16 +433,7 @@ public class Game {
 		}
 		return message;
 	}
-	
-	public void addWinner (String nickname) {
-		int numberOfPlayers = symbols.length();
-		rt.addWinner(nickname, turn.getScore(), columns, rows, snakes, ladders, numberOfPlayers, symbols);
-	}
-	
-	public String showRankingTree() {
-		return rt.toString();
-	}
-	
+
 	public void moveByTurn (int diceValue) {
 		if (turn == null) {
 			turn = players;
@@ -430,7 +450,7 @@ public class Game {
 	private void movePlayer (Player p, int diceValue) {
 		Cell cellToRemovePlayer = searchCell (p.getCellNumber());
 		int newCellNumber = p.getCellNumber() + diceValue;
-		Cell cellToAddPlayer = newCellNumber > rows * columns ? searchCell(rows * columns) : searchCell(newCellNumber);
+		Cell cellToAddPlayer = newCellNumber > getRows() * getColumns() ? searchCell(getRows() * getColumns()) : searchCell(newCellNumber);
 		cellToRemovePlayer.removePlayer(p.getSymbol());
 		if(cellToAddPlayer.hasSnakeOrLadder()) {
 			if(cellToAddPlayer.getSnake() != 0) {
@@ -459,11 +479,11 @@ public class Game {
 			p.setCellNumber(cellToAddPlayer.getNumber());
 		}
 		p.increaseCont();
-		p.setScore(rows * columns);
+		p.setScore(getRows() * getColumns());
 	}
 
 	public boolean hasWinner() {
-		if (searchCell(rows * columns).getInfo() != "") {
+		if (searchCell(getRows() * getColumns()).getInfo() != "") {
 			return true;
 		}else {
 			return false;
@@ -485,7 +505,7 @@ public class Game {
 	
 	private int searchLadder(int ladder, int number) {
 		int currentNumber = 0;
-		if(number <= (rows * columns)) {
+		if(number <= (getRows() * getColumns())) {
 			Cell current = searchCell(number);
 			if(current.getLadder() == ladder) {
 				currentNumber = current.getNumber();
