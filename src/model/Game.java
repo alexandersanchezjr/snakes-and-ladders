@@ -407,12 +407,7 @@ public class Game {
 	
 	public void addWinner (String nickname) {
 		int numberOfPlayers = symbols.length();
-		rt.addWinner(nickname, getWinner().getScore(), columns, rows, snakes, ladders, numberOfPlayers, symbols);
-	}
-	
-	private Player getWinner () {
-		Player p = searchPlayer (searchCell(rows * columns).getPlayer(), players);
-		return p;
+		rt.addWinner(nickname, turn.getScore(), columns, rows, snakes, ladders, numberOfPlayers, symbols);
 	}
 	
 	public String showRankingTree() {
@@ -435,7 +430,6 @@ public class Game {
 	private void movePlayer (Player p, int diceValue) {
 		Cell cellToRemovePlayer = searchCell (p.getCellNumber());
 		int newCellNumber = p.getCellNumber() + diceValue;
-		System.out.println("El jugador: " + p.getSymbol() + " está en la celda " + p.getCellNumber() + " y se mueve a la " + newCellNumber);
 		Cell cellToAddPlayer = newCellNumber > rows * columns ? searchCell(rows * columns) : searchCell(newCellNumber);
 		cellToRemovePlayer.removePlayer(p.getSymbol());
 		if(cellToAddPlayer.hasSnakeOrLadder()) {
