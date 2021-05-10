@@ -177,7 +177,7 @@ public class Winner {
 		    /* first recur on left child */
 		    msg += toString(w.left);
 		    /* then print the data of node */
-		    msg += "=================================================\n\n";
+		    msg += "=================================================\n";
 		    msg += "\nNombre: " + nickname + 
 		    		"\nPuntaje: " +  score + 
 		    		"\nDimensión tablero: " + columns + "x" + rows + 
