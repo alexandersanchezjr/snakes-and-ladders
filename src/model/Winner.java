@@ -173,6 +173,7 @@ public class Winner {
 	
 	public String toString(Winner w) {
 		String msg = "";
+		System.out.println("Hija: " + w);
 		if (w != null) {
 		    /* first recur on left child */
 		    msg += toString(w.left);
