@@ -10,20 +10,23 @@ import java.io.IOException;
  * @author Santiago Arevalo
  */
 public class Main {
+	
+	private Menu menu;
 	/**
 	 * 
 	 */
-	public Main() {
+	private Main() {
+		menu = new Menu ();
 	}
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		Main main = new Main ();
 		System.out.println("¡Bienvenido a Serpientes y Escaleras!");
-		Menu menu = new Menu ();
 		try {
-			menu.startProgram();
+			main.menu.startProgram();
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
