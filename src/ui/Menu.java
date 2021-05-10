@@ -37,9 +37,14 @@ public class Menu {
 		return choice;
 	}
 
-	public void readGame() throws IOException {
-		System.out.println("Ingrese la informacion del juego en una sola linea con el siguiente formato:");
-		System.out.println("N°filas N°columnas N°serpientes N°escaleras N°jugadores/Simbolos\nPuede ingresar el numero de jugadores y los simbolos seran asigandos aleatoriamente o ingresar los simbolos de cada uno sin separacion... ");
+	public void readGame() throws IOException, InterruptedException {
+		System.out.println("Ingrese la informacion del juego en una sola linea con la siguiente informacion:");
+		System.out.println("- n: Numero de filas\n" + "- m: Numero de columnas\n" + "- s: Numero de serpientes\n" + "- e: Numero de escaleras\n" + "- p: Numero de jugadores");
+		System.out.println("\nDigite en una misma línea 5 números enteros positivos separados por espacio indicando n, m, s, e y p respectivamente");
+		System.out.println("Puedes ingresar los simbolos (* ! O X % $ # + &) de los jugadores directamente en lugar del entero positivo 'p'.");
+		System.out.println("\nUn ejemplo de entrada así sería:\n5 4 2 3 #%* (todo en la misma línea) que indica al programa que cree un tablero de tamaño 5x4, con 2 serpientes, 3 escaleras y 3 jugadores. "
+				+ "\nEl primer jugador es #, el segundo es % y el tercero *.\r\n"
+				+ "");
 		String firstLine = br.readLine();
 		String[] parts = firstLine.split(" ");
 		int rows = Integer.parseInt(parts[0]);
@@ -49,7 +54,7 @@ public class Menu {
 		
 		
 		if((snakes*2) + (ladders*2) > rows*columns) {
-			System.out.println("La cantidad de serpientes y escaleras sobrepasa las dimensiones del tablero de juego");
+			System.out.println("La cantidad de serpientes y escaleras sobrepasa las dimensiones del tablero de juego, intente con otros valores\n");
 			return;
 		}
 		else if(parts[4].contains("*") || parts[4].contains("!") || parts[4].contains("O") || parts[4].contains("X") || parts[4].contains("%") || parts[4].contains("$") || parts[4].contains("#") || parts[4].contains("+") || parts[4].contains("&")) {
@@ -69,11 +74,11 @@ public class Menu {
 		
 	}
 	
-	public void playGame(String input) throws IOException {
+	public void playGame(String input) throws IOException, InterruptedException {
 		if(input.equals("")) {
 			int diceValue = (int) (Math.random() * 6 + 1);
 			game.moveByTurn(diceValue);
-			System.out.println("El jugador " + game.getTurn().getSymbol() + " ha lanzado el dado y obtuvo el puntaje " + diceValue);
+			System.out.println("El jugador " + game.getTurn().getSymbol() + " ha lanzado el dado y obtuvo el puntaje " + diceValue + "\n");
 			System.out.println(game.gameToString());
 			if (game.hasWinner()) {
 				System.out.println("El jugador " + game.getTurn().getSymbol() + " ha ganado el juego, con " + game.getTurn().getCont() + " movimientos");
@@ -99,31 +104,31 @@ public class Menu {
 		}
 	}
 	
-	public void startSimulation () {
+	public void startSimulation () throws InterruptedException {
     	Timer timer = new Timer();
-    	timer.schedule(new TimerTask() {
-    	  @Override
-    	  public void run() {
-    		  int diceValue = (int) (Math.random() * 6 + 1);
-    		  game.moveByTurn(diceValue);
-    		  System.out.println("El jugador " + game.getTurn().getSymbol() + " ha lanzado el dado y obtuvo el puntaje " + diceValue + "\n");
-    		  System.out.println(game.gameToString());
-    		  if (game.hasWinner()) {
-    			  System.out.println("El jugador " + game.getTurn().getSymbol() + " ha ganado el juego, con " + game.getTurn().getCont() + " movimientos");
-    			  System.out.print("Nickname: ");
-    			  String nickname = "Computadora";
-    			  try {
-    				  nickname = br.readLine();
-    			  } catch (IOException e) {
+    	TimerTask tt = new TimerTask() {
+    		@Override
+    		public void run() {
+    			int diceValue = (int) (Math.random() * 6 + 1);
+				game.moveByTurn(diceValue);
+				System.out.println("El jugador " + game.getTurn().getSymbol() + " ha lanzado el dado y obtuvo el puntaje " + diceValue + "\n");
+				System.out.println(game.gameToString());
+				if (game.hasWinner()) {
+					System.out.println("El jugador " + game.getTurn().getSymbol() + " ha ganado el juego, con " + game.getTurn().getCont() + " movimientos");
+					System.out.print("Nickname: ");
+					String nickname = "Computadora";
+					try {
+						nickname = br.readLine();
+					} catch (IOException e) {
 						// TODO Auto-generated catch block
-    				  e.printStackTrace();
-    			  }
-    			  game.addWinner(nickname);	
-    			  cancel();
-    		  }
-    	  }
-    	}, 0, 2000);
-		
+						e.printStackTrace();
+					}
+					game.addWinner(nickname);	
+					cancel();
+				}
+		  	}
+    	};
+    	timer.schedule(tt, 0, 2000);
 	}
 	
 	public void showRankingBoard() {
@@ -134,7 +139,7 @@ public class Menu {
 		}
 	}
 	
-	public void doOperation(int choice) {
+	public void doOperation(int choice) throws InterruptedException {
 		switch(choice) {
 			case START:
 				try {
@@ -155,7 +160,7 @@ public class Menu {
 		}
 	}
 	
-	public void startProgram() throws NumberFormatException, IOException  {
+	public void startProgram() throws NumberFormatException, IOException, InterruptedException  {
 		showMenu();
 		int option = readOption();
 		doOperation(option);
@@ -172,7 +177,12 @@ public class Menu {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			doOperation(option);
+			try {
+				doOperation(option);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			startProgram(option);
 		}
 	}
