@@ -233,7 +233,7 @@ public class Game {
 		if (!stop) {
 			firstLadder = (int) ((Math.random() * ((rows*columns)-2)) + 2);
 			Cell firstCell = searchCell(firstLadder);
-			if (!firstCell.hasSnakeOrLadder() && rowHasSameLadder(firstCell, firstCell.getLadder())) {
+			if (!firstCell.hasSnakeOrLadder() && !rowHasSameLadder(firstCell, ladders)) {
 				firstCell.setLadder(ladders);
 				stop = true;
 			}
@@ -247,7 +247,7 @@ public class Game {
 		if (!stop) {
 			secondLadder = (int) ((Math.random() * ((rows*columns)-2)) + 2);
 			Cell secondCell = searchCell(secondLadder);
-			if (!secondCell.hasSnakeOrLadder() && rowHasSameLadder(secondCell, secondCell.getLadder())) {
+			if (!secondCell.hasSnakeOrLadder() && !rowHasSameLadder(secondCell, ladders)) {
 				secondCell.setLadder(ladders);
 				stop = true;
 			}
@@ -304,8 +304,9 @@ public class Game {
 		if (stop != true) {
 			firstSnake = (int) ((Math.random() * ((rows*columns)-1)) + 1);
 			Cell firstCell = searchCell(firstSnake);
-			if (!firstCell.hasSnakeOrLadder() && rowHasSameSnake(firstCell, firstCell.getSnake())) {
-				firstCell.setSnake((char)(64 + snakes));
+			char snakeLetter = (char)(64 + snakes);
+			if (!firstCell.hasSnakeOrLadder() && !rowHasSameSnake(firstCell, snakeLetter)) {
+				firstCell.setSnake(snakeLetter);
 				stop = true;
 			}
 			createFirstSnake (stop, snakes);
@@ -316,8 +317,9 @@ public class Game {
 		if (stop != true) {
 			secondSnake = (int) ((Math.random() * ((rows*columns)-1)) + 1);
 			Cell secondCell = searchCell(secondSnake);
-			if (!secondCell.hasSnakeOrLadder()) {
-				secondCell.setSnake((char)(64 + snakes));
+			char snakeLetter = (char)(64 + snakes);
+			if (!secondCell.hasSnakeOrLadder() && !rowHasSameSnake(secondCell, snakeLetter)) {
+				secondCell.setSnake(snakeLetter);
 				stop = true;
 			}
 			createSecondSnake (stop, snakes);
@@ -420,18 +422,20 @@ public class Game {
 	public void moveByTurn (int diceValue) {
 		if (turn == null) {
 			turn = players;
+			movePlayer (turn, diceValue);
+		}else if (turn.getRight() != null){
+			turn = turn.getRight();
+			movePlayer (turn, diceValue);
 		}else {
 			turn = turn.getRight();
-			if (turn == null) {
-				moveByTurn(diceValue);
-			}
+			moveByTurn (diceValue);
 		}
-		movePlayer (turn, diceValue);
 	}
 	
 	private void movePlayer (Player p, int diceValue) {
 		Cell cellToRemovePlayer = searchCell (p.getCellNumber());
 		int newCellNumber = p.getCellNumber() + diceValue;
+		System.out.println("El jugador: " + p.getSymbol() + " está en la celda " + p.getCellNumber() + " y se mueve a la " + newCellNumber);
 		Cell cellToAddPlayer = newCellNumber > rows * columns ? searchCell(rows * columns) : searchCell(newCellNumber);
 		cellToRemovePlayer.removePlayer(p.getSymbol());
 		if(cellToAddPlayer.hasSnakeOrLadder()) {
