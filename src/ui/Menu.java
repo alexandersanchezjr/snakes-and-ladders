@@ -73,10 +73,10 @@ public class Menu {
 		if(input.equals("")) {
 			int diceValue = (int) (Math.random() * 6 + 1);
 			game.moveByTurn(diceValue);
-			System.out.println("El judador " + game.getTurn().getSymbol() + " ha lanzado el dado y obtuvo el puntaje " + diceValue);
+			System.out.println("El jugador " + game.getTurn().getSymbol() + " ha lanzado el dado y obtuvo el puntaje " + diceValue);
 			System.out.println(game.gameToString());
 			if (game.hasWinner()) {
-				System.out.println("El jugador " + game.getTurn() + " ha ganado el juego, con " + game.getTurn().getCont() + " movimientos");
+				System.out.println("El jugador " + game.getTurn().getSymbol() + " ha ganado el juego, con " + game.getTurn().getCont() + " movimientos");
 				System.out.print("Nickname: ");
 				String nickname = br.readLine();
 				game.addWinner(nickname);		
