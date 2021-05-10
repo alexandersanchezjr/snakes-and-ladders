@@ -3,10 +3,9 @@ package ui;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import model.Game;
+import model.RankingTree;
 
 public class Menu {
 	
@@ -19,11 +18,13 @@ public class Menu {
 	private final static String SHOW_ORIGINAL_BOARD = "num";
 
 	private Game game;
+	private RankingTree rt;
 	
 	private BufferedReader br;
 		
 	public Menu() {
 		br = new BufferedReader(new InputStreamReader(System.in));
+		rt = new RankingTree();
 	}
 	
 	public void showMenu() {
@@ -84,7 +85,7 @@ public class Menu {
 				System.out.println("El jugador " + game.getTurn().getSymbol() + " ha ganado el juego, con " + game.getTurn().getCont() + " movimientos");
 				System.out.print("Nickname: ");
 				String nickname = br.readLine();
-				game.addWinner(nickname);		
+				addWinner(nickname);		
 			}else {
 				System.out.println("Esperando salto de linea para continuar...");
 				playGame(br.readLine());
@@ -105,38 +106,34 @@ public class Menu {
 	}
 	
 	public void startSimulation () throws InterruptedException {
-    	Timer timer = new Timer();
-    	TimerTask tt = new TimerTask() {
-    		@Override
-    		public void run() {
-    			int diceValue = (int) (Math.random() * 6 + 1);
-				game.moveByTurn(diceValue);
-				System.out.println("El jugador " + game.getTurn().getSymbol() + " ha lanzado el dado y obtuvo el puntaje " + diceValue + "\n");
-				System.out.println(game.gameToString());
-				if (game.hasWinner()) {
-					System.out.println("El jugador " + game.getTurn().getSymbol() + " ha ganado el juego, con " + game.getTurn().getCont() + " movimientos");
-					System.out.print("Nickname: ");
-					String nickname = "Computadora";
-					try {
-						nickname = br.readLine();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					game.addWinner(nickname);	
-					cancel();
+		int diceValue = (int) (Math.random() * 6 + 1);
+		game.moveByTurn(diceValue);
+		System.out.println("El jugador " + game.getTurn().getSymbol() + " ha lanzado el dado y obtuvo el puntaje " + diceValue + "\n");
+		System.out.println(game.gameToString());
+		if (game.hasWinner()) {
+			System.out.println("El jugador " + game.getTurn().getSymbol() + " ha ganado el juego, con " + game.getTurn().getCont() + " movimientos");
+			System.out.print("Nickname: ");
+			String nickname = "";
+			try {
+				nickname = br.readLine();
+				if (nickname == "") {
+					nickname = "Computadora";					
 				}
-		  	}
-    	};
-    	timer.schedule(tt, 0, 2000);
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			addWinner(nickname);	
+		}else {
+			Thread.sleep(2000);
+			startSimulation();
+		}
 	}
 	
-	public void showRankingBoard() {
-		if (game == null) {
-			System.out.println("No se ha iniciado algún juego. Empiece un nuevo juego");
-		}else {
-			System.out.println(game.showRankingTree());
-		}
+	public void addWinner (String nickname) {
+		int numberOfPlayers = game.getSymbols().length();
+		rt.addWinner(nickname, game.getTurn().getScore(), game.getColumns(), game.getRows(), game.getSnakes(), game.getLadders(), numberOfPlayers, game.getSymbols());
 	}
 	
 	public void doOperation(int choice) throws InterruptedException {
@@ -150,7 +147,7 @@ public class Menu {
 				}
 				break;
 			case SHOW_RANKING:
-				showRankingBoard();
+					System.out.println(rt.toString());
 				break;
 			case EXIT:
 				System.out.println("¡Adios!");
