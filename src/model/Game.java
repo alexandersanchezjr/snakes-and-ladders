@@ -96,8 +96,8 @@ public class Game {
 	
 	/**
 	* Assign the symbols chosen by the user.<br>
-	* <b>pre #1:</b> The playerSymbols is initializated (is not empty). <br>
-	* <b>pre #2:</b> The length is initializated (is not zero). <br>
+	* <b>pre:</b> The playerSymbols is initialized (is not empty). <br>
+	* <b>pre:</b> The length is initialized (is not zero). <br>
 	* <b>post:</b> Has added the new player(s) given its symbols. 
 	* @param playersSymbols The symbols the user chooses. playersSymbols != null, playersSymbols != "".
 	* @param length Length of the playerSymbols string. length &gt;= 0.
@@ -112,8 +112,8 @@ public class Game {
 
 	/**
 	* Create a new game.<br>
-	* <b>pre #1:</b> The snakes is initializated (is not zero). <br>
-	* <b>pre #2:</b> The ladders is initializated (is not zero). <br>
+	* <b>pre:</b> The snakes is initialized (is not zero). <br>
+	* <b>pre:</b> The ladders is initialized (is not zero). <br>
 	* <b>post:</b> Has created the board and player(s). 
 	* @param snakes The number of snakes the user chooses. snakes &gt;= 0.
 	* @param ladders The number of ladders the user chooses. ladders &gt;= 0.
@@ -145,7 +145,7 @@ public class Game {
 	
 	/**
 	* Assign random symbols to the players which will be created.<br>
-	* <b>pre #1:</b> The numberOfPlayers is initializated (is not zero). <br>
+	* <b>pre:</b> The numberOfPlayers is initialized (is not zero). <br>
 	* <b>post:</b> Has created player(s) with random symbols. 
 	* @param numberOfPlayers The number of players the user chooses will be created. numberOfPlayers &gt;= 0.
 	*/
@@ -158,8 +158,8 @@ public class Game {
 	
 	/**
 	* Create a player with a random symbol recursively just when the resultant symbol is not used previously.<br>
-	* <b>pre #1:</b> The numberOfPlayers is not zero. <br>
-	* <b>pre #2:</b> The symbol variable is one of the nine (9) predefined symbols. <br>
+	* <b>pre:</b> The numberOfPlayers is not zero. <br>
+	* <b>pre:</b> The symbol variable is one of the nine (9) predefined symbols. <br>
 	* <b>post:</b> Has created player with a unique symbol. 
 	* @param numberOfPlayers The number of the player in order to be created. numberOfPlayers &gt;= 0.
 	*/
@@ -175,7 +175,7 @@ public class Game {
 	
 	/**
 	* Search a player in the game and returns it.<br>
-	* <b>pre #1:</b> The player to be searched exists in the linked list (is not null). <br>
+	* <b>pre:</b> The player to be searched exists in the linked list (is not null). <br>
 	* <b>post:</b> Has found or not the desired player in the game. 
 	* @param player The player to be searched. player != null.
 	* @param current The linked list players which will be traverse.
@@ -235,9 +235,9 @@ public class Game {
 	
 	/**
 	* Create a complete row for the board and, therefore, the whole board.<br>
-	* <b>pre #1:</b> The currentFirstRow is not null. <br>
-	* <b>pre #2:</b> The i param is equal to 0. <br>
-	* <b>pre #3:</b> The j param is equal to 0. <br>
+	* <b>pre:</b> The currentFirstRow is not null. <br>
+	* <b>pre:</b> The i param is equal to 0. <br>
+	* <b>pre:</b> The j param is equal to 0. <br>
 	* <b>post:</b> Has created the board. 
 	* @param i The iterator for the rows. i == 0.
 	* @param j The iterator for the columns. j == 0.
@@ -255,13 +255,12 @@ public class Game {
 
 	/**
 	* Create a cell for the respective column in a row.<br>
-	* <b>pre #1:</b> The previous is not null. <br>
+	* <b>pre:</b> The previous is not null. <br>
 	* <b>post:</b> Has created the row, column by column. 
 	* @param i The iterator for the rows. i == 0.
 	* @param j The iterator for the columns. j == 0.
 	* @param previous The first cell in the row. previous != null.
 	* @param previous The first cell in the row. previous != null.
-
 	*/
 	private void createColumn(int i, int j, Cell previous, Cell previuousRow) {	
 		if(j < getColumns()) {
@@ -279,11 +278,24 @@ public class Game {
 		}
 	}
 	
+	/**
+	* Number the cells once created.<br>
+	* <b>pre:</b> The board exists. <br>
+	* <b>post:</b> Has numbered the cells in a predefined format. 
+	*/
 	private void numberCells () {
 		Cell firstBoardCell = searchFirstBoardCell(first);
 		numberCellsToRight (2, getColumns() + 1 , firstBoardCell);
 	}
 	
+	/**
+	* Number the cells which number of row is odd.<br>
+	* <b>pre:</b> The current is not null. <br>
+	* <b>post:</b> Has numbered this row in ascendant order from left to right. 
+	* @param i The number of the row.
+	* @param j The number of columns.
+	* @param current The current cell as parameter. current != null.
+	*/
 	private void numberCellsToRight (int i, int j, Cell current) {
 		if (current != null) {
 			numberCellsToRight(i, j + 1, current.getRight());
@@ -295,6 +307,14 @@ public class Game {
 		}
 	}
 	
+	/**
+	* Number the cells which number of row is even.<br>
+	* <b>pre:</b> The current is not null. <br>
+	* <b>post:</b> Has numbered this row in descendant order from left to right. 
+	* @param i The number of the row.
+	* @param j The number of columns.
+	* @param current The current cell as parameter. current != null.
+	*/
 	private void numberCellsToLeft (int i, int j, Cell current) {
 		if (current != null)  {
 			numberCellsToLeft(i, j - 1, current.getRight());
@@ -307,6 +327,13 @@ public class Game {
 		
 	}
 	
+	/**
+	* Search the cell with the number of cell equals to 1 and returns it.<br>
+	* <b>pre:</b> The current cell is not to null. <br>
+	* <b>post:</b> Has returned the the first cell. 
+	* @param current The first cell which Game class has the association with and the cell under this cell. current != null.
+	* @return firstBoardCell The cell with the cell number equals to 1.
+	*/
 	private Cell searchFirstBoardCell (Cell current) {
 		Cell firstBoardCell = null;
 		if (current.getDown() == null) {
@@ -317,6 +344,12 @@ public class Game {
 		return firstBoardCell;
 	}
 	
+	/**
+	* Include the number of ladders on the board.<br>
+	* <b>pre:</b> The ladders parameter is not zero. <br>
+	* <b>post:</b> Has include the whole desired ladders. 
+	* @param ladders The number of ladders to be added to the board.
+	*/
 	private void includeLadders(int ladders) {
 		if (ladders > 0) {
 			createFirstLadder(false, ladders);
@@ -325,6 +358,14 @@ public class Game {
 		}
 	}
 	
+	/**
+	* Create the start or end (first part) of a ladder in a cell.<br>
+	* <b>pre:</b> The stop parameter is false when the method is invoked. Then is prone to change. <br>
+	* <b>pre:</b> The ladders parameter is equal to the number in ladders in the method which invoked this one. <br>
+	* <b>post:</b> Has created the first part of the ladder. 
+	* @param stop The sentinel parameter which will finish the method.
+	* @param ladders The number of the ladder which will be created. 
+	*/
 	private void createFirstLadder (boolean stop, int ladders) {
 		if (!stop) {
 			firstLadder = (int) ((Math.random() * ((getRows()*getColumns())-2)) + 2);
@@ -338,6 +379,14 @@ public class Game {
 		
 	}
 	
+	/**
+	* Create the start or end (second part) of a ladder in a cell.<br>
+	* <b>pre:</b> The stop parameter is false when the method is invoked. Then is prone to change. <br>
+	* <b>pre:</b> The ladders parameter is equal to the number in ladders in the method which invoked this one. <br>
+	* <b>post:</b> Has created the second part of the ladders . 
+	* @param stop The sentinel parameter which will finish the method.
+	* @param ladders The number of the ladder which will be created. 
+	*/
 	private void createSecondLadder (boolean stop, int ladders) {
 
 		if (!stop) {
@@ -351,6 +400,15 @@ public class Game {
 		}
 	}
 	
+	/**
+	* Verifies if the current cell row has the same ladder number.<br>
+	* <b>pre:</b> The current cell is not to null. <br>
+	* <b>pre:</b> The cellLadder is not to zero. <br>
+	* <b>post:</b> Has returned true if has found the same ladder or false if not. 
+	* @param current The cell required to create the ladder in. current != null.
+	* @param cellLadder The number of the ladder which will be compared.
+	* @return ladder True if same ladder is found or false if not.
+	*/
 	private boolean rowHasSameLadder(Cell current, int cellLadder) {	
 		boolean ladder = false;
 		boolean ladderInLeft = false;
@@ -388,6 +446,12 @@ public class Game {
 		return sameLadderInRight;
 	}
 	
+	/**
+	* Include the number of snakes on the board.<br>
+	* <b>pre:</b> The snakes parameter is not zero. <br>
+	* <b>post:</b> Has include the whole desired snakes. 
+	* @param snakes The number of snakes to be added to the board.
+	*/
 	private void includeSnakes(int snakes) {
 		if (snakes > 0) {
 			createFirstSnake(false, snakes);
@@ -396,6 +460,14 @@ public class Game {
 		}
 	}
 	
+	/**
+	* Create the start or end (first part) of a snake in a cell.<br>
+	* <b>pre:</b> The stop parameter is false when the method is invoked. Then is prone to change. <br>
+	* <b>pre:</b> The snakes parameter is equal to the number in snakes in the method which invoked this one. <br>
+	* <b>post:</b> Has created the first part of the snake . 
+	* @param stop The sentinel parameter which will finish the method.
+	* @param ladders The number of the snake which will be casted in a char type, then will be created. 
+	*/
 	private void createFirstSnake (boolean stop, int snakes) {
 		if (stop != true) {
 			firstSnake = (int) ((Math.random() * ((getRows()*getColumns())-1)) + 1);
@@ -409,6 +481,14 @@ public class Game {
 		}
 	}
 	
+	/**
+	* Create the start or end (second part) of a snake in a cell.<br>
+	* <b>pre:</b> The stop parameter is false when the method is invoked. Then is prone to change. <br>
+	* <b>pre:</b> The snakes parameter is equal to the number in snakes in the method which invoked this one. <br>
+	* <b>post:</b> Has created the second part of the snakes . 
+	* @param stop The sentinel parameter which will finish the method.
+	* @param ladders The number of the snake which will be casted in a char type, then will be created. 
+	*/
 	private void createSecondSnake (boolean stop, int snakes) {
 		if (stop != true) {
 			secondSnake = (int) ((Math.random() * ((getRows()*getColumns())-1)) + 1);
@@ -423,6 +503,15 @@ public class Game {
 			
 	}
 	
+	/**
+	* Verifies if the current cell row has the same snake character value.<br>
+	* <b>pre:</b> The current cell is not to null. <br>
+	* <b>pre:</b> The cellSnake value is not below of 64. <br>
+	* <b>post:</b> Has returned true if has found the same snake or false if not. 
+	* @param current The cell required to create the snake in. current != null.
+	* @param cellSnake The character of the snake which will be compared.
+	* @return snake True if same snake is found or false if not.
+	*/
 	private boolean rowHasSameSnake(Cell current, char cellSnake) {
 		boolean snake = false;
 		boolean snakeInLeft = false;
@@ -460,6 +549,14 @@ public class Game {
 		return sameSnakeInRight;
 	}
 
+	/**
+	* Search the cell given a cell number.<br>
+	* <b>pre:</b> The cellNumber is not zero. <br>
+	* <b>pre:</b> The the cell exists. <br>
+	* <b>post:</b> Has returned the cell if found or null if not. 
+	* @param cellNumber The number of the cell which will be searched. cellNumber != 0.
+	* @return Cell A cell if found of null if not.
+	*/
 	private Cell searchCell (int cellNumber) {		
 		return searchCellInRow(0, 0, cellNumber, first);
 	}
@@ -492,6 +589,13 @@ public class Game {
 		
 	}
 	
+	/**
+	* Converts the linked list of players in a symbols string.<br>
+	* <b>pre:</b> The current is not null. <br>
+	* <b>post:</b> Has returned the string of players. 
+	* @param current The first player in the linked list. current != nul.
+	* @return message A string containing the players symbols.
+	*/
 	private String playersToString (Player current) {
 		String message = "";
 		if (current != null) {
@@ -501,6 +605,12 @@ public class Game {
 		return message;
 	}
 
+	/**
+	* Move a player depending of the turn of each one.<br>
+	* <b>pre:</b> The diceValue a number in a range. <br>
+	* <b>post:</b> Has move the player by its turn respectively. 
+	* @param diceValue The dice value. diceValue &gt;= 1 and &lt;=6.
+	*/
 	public void moveByTurn (int diceValue) {
 		if (turn == null) {
 			turn = players;
@@ -514,6 +624,14 @@ public class Game {
 		}
 	}
 	
+	/**
+	* Move a player to a cell given the dice value or in a row above or below if is moved to a ladder or snake, respectively.<br>
+	* <b>pre:</b> The diceValue a number in a range. <br>
+	* <b>pre:</b> The p player is not null. <br>
+	* <b>post:</b> Has move the player to the correspondent cell. 
+	* @param diceValue The dice value. diceValue &gt;= 1 and &lt;=6.
+	* @param p The p player to be moved. p != null.
+	*/
 	private void movePlayer (Player p, int diceValue) {
 		Cell cellToRemovePlayer = searchCell (p.getCellNumber());
 		int newCellNumber = p.getCellNumber() + diceValue;
@@ -583,6 +701,13 @@ public class Game {
 		return currentNumber;
 	}
 
+	/**
+	* Converts the game board in a cell string with just numbers and its snakes and ladders.<br>
+	* <b>pre:</b> The current is not null. <br>
+	* <b>post:</b> Has returned the string of players. 
+	* @param current The first player in the linked list. current != null.
+	* @return message A string containing the players symbols.
+	*/
 	public String boardToString() {
 		String msg;
 		msg = boardRowToString(first);
@@ -607,6 +732,13 @@ public class Game {
 		return msg;
 	}
 	
+	/**
+	* Converts the game board in a cell string with snakes, ladders and players .<br>
+	* <b>pre:</b> The current is not null. <br>
+	* <b>post:</b> Has returned the string of players. 
+	* @param current The first player in the linked list. current != null.
+	* @return message A string containing the players symbols.
+	*/
 	public String gameToString() {
 		String msg;
 		msg = gameRowToString(first);
