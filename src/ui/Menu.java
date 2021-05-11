@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 
 import model.Game;
 import model.RankingTree;
+import model.Winner;
 
 public class Menu {
 	
@@ -54,8 +55,8 @@ public class Menu {
 		int ladders = Integer.parseInt(parts[3]);
 		
 		
-		if((snakes*2) + (ladders*2) > rows*columns) {
-			System.out.println("La cantidad de serpientes y escaleras sobrepasa las dimensiones del tablero de juego, intente con otros valores\n");
+		if((snakes*2) + (ladders*2) >= rows*columns) {
+			System.out.println("La cantidad de serpientes y escaleras sobrepasa o es igual a las dimensiones del tablero de juego, intente con otros valores\n");
 			return;
 		}
 		else if(parts[4].contains("*") || parts[4].contains("!") || parts[4].contains("O") || parts[4].contains("X") || parts[4].contains("%") || parts[4].contains("$") || parts[4].contains("#") || parts[4].contains("+") || parts[4].contains("&")) {
@@ -136,6 +137,16 @@ public class Menu {
 		rt.addWinner(nickname, game.getTurn().getScore(), game.getColumns(), game.getRows(), game.getSnakes(), game.getLadders(), numberOfPlayers, game.getSymbols());
 	}
 	
+	public void showRankingTree(Winner current) {
+		if(current == null) {
+			return;
+		}
+		showRankingTree(current.getLeft());
+		System.out.println(current.showData());
+		showRankingTree(current.getRight());
+	}
+	
+	
 	public void doOperation(int choice) throws InterruptedException {
 		switch(choice) {
 			case START:
@@ -147,7 +158,11 @@ public class Menu {
 				}
 				break;
 			case SHOW_RANKING:
-					System.out.println(rt.toString());
+				if(rt.getRoot() == null) {
+					System.out.println("No hay jugadores ganadores aún");
+				}else {
+					showRankingTree(rt.getRoot());
+				}
 				break;
 			case EXIT:
 				System.out.println("¡Adios!");
