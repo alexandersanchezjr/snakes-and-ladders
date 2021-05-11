@@ -93,7 +93,15 @@ public class Game {
 	public int getLadders() {
 		return ladders;
 	}
-
+	
+	/**
+	* Assign the symbols chosen by the user.<br>
+	* <b>pre #1:</b> The playerSymbols is initializated (is not empty). <br>
+	* <b>pre #2:</b> The length is initializated (is not zero). <br>
+	* <b>post:</b> Has added the new player(s) given its symbols. 
+	* @param playersSymbols The symbols the user chooses. playersSymbols != null, playersSymbols != "".
+	* @param length Length of the playerSymbols string. length &gt;= 0.
+	*/
 	private void assignSymbols(String playersSymbols, int length){
 		if (length >= 0) {
 			assignSymbols(playersSymbols, length-1);
@@ -102,6 +110,14 @@ public class Game {
 		}
 	}
 
+	/**
+	* Create a new game.<br>
+	* <b>pre #1:</b> The snakes is initializated (is not zero). <br>
+	* <b>pre #2:</b> The ladders is initializated (is not zero). <br>
+	* <b>post:</b> Has created the board and player(s). 
+	* @param snakes The number of snakes the user chooses. snakes &gt;= 0.
+	* @param ladders The number of ladders the user chooses. ladders &gt;= 0.
+	*/
 	private void createGame(int snakes, int ladders) {
 		first = new Cell ();
 		createRow(0,0,first);
@@ -110,6 +126,12 @@ public class Game {
 		includeLadders(ladders);
 	}
 	
+	/**
+	* Add a new player to the linked list of players recursively.<br>
+	* <b>post:</b> Has added a new player to the game if and only if the new player did not exist previously. 
+	* @param newPlayer The new player to be added. current != null.
+	* @param current The linked list players which will be traverse.
+	*/	
 	private void addPlayer(Player newPlayer, Player current) {
 		 if (players == null) {
 			 players = newPlayer;
@@ -121,6 +143,12 @@ public class Game {
 		 }
 	}
 	
+	/**
+	* Assign random symbols to the players which will be created.<br>
+	* <b>pre #1:</b> The numberOfPlayers is initializated (is not zero). <br>
+	* <b>post:</b> Has created player(s) with random symbols. 
+	* @param numberOfPlayers The number of players the user chooses will be created. numberOfPlayers &gt;= 0.
+	*/
 	private void assignRandomSymbols(int numberOfPlayers) {
 		if(numberOfPlayers > 0) {
 			createRandomPlayer (numberOfPlayers);
@@ -128,6 +156,13 @@ public class Game {
 		}
 	}
 	
+	/**
+	* Create a player with a random symbol recursively just when the resultant symbol is not used previously.<br>
+	* <b>pre #1:</b> The numberOfPlayers is not zero. <br>
+	* <b>pre #2:</b> The symbol variable is one of the nine (9) predefined symbols. <br>
+	* <b>post:</b> Has created player with a unique symbol. 
+	* @param numberOfPlayers The number of the player in order to be created. numberOfPlayers &gt;= 0.
+	*/
 	private void createRandomPlayer (int numberOfPlayers) {
 		char symbol = generateRandomSymbol();
 		Player newPlayer = new Player (symbol);
@@ -138,6 +173,14 @@ public class Game {
 		}
 	}
 	
+	/**
+	* Search a player in the game and returns it.<br>
+	* <b>pre #1:</b> The player to be searched exists in the linked list (is not null). <br>
+	* <b>post:</b> Has found or not the desired player in the game. 
+	* @param player The player to be searched. player != null.
+	* @param current The linked list players which will be traverse.
+	* @return p The found player or null if was not found.
+	*/
 	private Player searchPlayer (Player player, Player current) {
 		Player p = null;
 		if (current != null) {
@@ -150,6 +193,11 @@ public class Game {
 		return p;
 	}
 	
+	/**
+	* Generate a random symbol.<br>
+	* <b>post:</b> Has returned a character of the nine (9) previously defined.
+	* @return symbol The symbol generated randomly.
+	*/
 	private char generateRandomSymbol() {
 		char symbol = 0;
 		int symbolNumber = (int) (Math.random() * 9 +1);
@@ -185,7 +233,16 @@ public class Game {
 		return symbol;
 	}
 	
-
+	/**
+	* Create a complete row for the board and, therefore, the whole board.<br>
+	* <b>pre #1:</b> The currentFirstRow is not null. <br>
+	* <b>pre #2:</b> The i param is equal to 0. <br>
+	* <b>pre #3:</b> The j param is equal to 0. <br>
+	* <b>post:</b> Has created the board. 
+	* @param i The iterator for the rows. i == 0.
+	* @param j The iterator for the columns. j == 0.
+	* @param currentFirstRow The current row to be created since the first cell in row. currentFirstRow != null.
+	*/
 	private void createRow(int i, int j, Cell currentFirstRow) {
 		createColumn(i,j+1,currentFirstRow,currentFirstRow.getDown());
 		if(i+1 < getRows()) {
@@ -196,6 +253,16 @@ public class Game {
 		}
 	}
 
+	/**
+	* Create a cell for the respective column in a row.<br>
+	* <b>pre #1:</b> The previous is not null. <br>
+	* <b>post:</b> Has created the row, column by column. 
+	* @param i The iterator for the rows. i == 0.
+	* @param j The iterator for the columns. j == 0.
+	* @param previous The first cell in the row. previous != null.
+	* @param previous The first cell in the row. previous != null.
+
+	*/
 	private void createColumn(int i, int j, Cell previous, Cell previuousRow) {	
 		if(j < getColumns()) {
 			Cell current = new Cell ();
