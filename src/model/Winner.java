@@ -171,25 +171,17 @@ public class Winner {
 		this.right = right;
 	}
 	
-	public String toString(Winner w) {
+	public String showData() {
 		String msg = "";
-		System.out.println("Hija: " + w);
-		if (w != null) {
-		    /* first recur on left child */
-		    msg += toString(w.left);
-		    /* then print the data of node */
-		    msg += "=================================================\n";
-		    msg += "\nNombre: " + nickname + 
-		    		"\nPuntaje: " +  score + 
-		    		"\nDimensión tablero: " + columns + "x" + rows + 
-		    		"\nSerpientes: " + snakes + 
-		    		"\nEscaleras: " + ladders + 
-		    		"\nNumero de jugadores: " + players + 
-		    		"\nSimbolos de jugadores: " + symbols + "\n\n";
-		    msg += "=================================================\n\n";
-		    /* now recur on right child */
-		    msg += toString(w.right);
-	    }
+	    msg += "=================================================\n";
+	    msg += "\nNombre: " + nickname + 
+	    		"\nPuntaje: " +  score + 
+	    		"\nDimensión tablero: " + columns + "x" + rows + 
+	    		"\nSerpientes: " + snakes + 
+	    		"\nEscaleras: " + ladders + 
+	    		"\nNumero de jugadores: " + players + 
+	    		"\nSimbolos de jugadores: " + symbols + "\n\n";
+	    msg += "=================================================\n\n";
 	    return msg;
 	}
 }
