@@ -17,3 +17,6 @@ The program design (functional requirements and class diagram) is documented in 
 ***Operative System:*** Windows 10 x64 
 
 ***Development Environment:*** Eclipse IDE
+
+## **Credits** ©
+Our greatest thanks to [Juan M. Reyes G (seyerman)](https://github.com/seyerman) to supoort the development of this program. This would not be possible without the explanations about recursion, its use and also, our own linked list management. Sincerely thanks.
