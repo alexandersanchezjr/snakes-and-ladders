@@ -15,16 +15,6 @@ public class Winner {
 	private Winner left;
 	private Winner right;
 	
-	/**
-	 * @param nickname
-	 * @param score
-	 * @param columns
-	 * @param rows
-	 * @param snakes
-	 * @param ladders
-	 * @param players
-	 * @param symbols
-	 */
 	public Winner(String nickname, int score, int columns, int rows, int snakes, int ladders, int players, String symbols) {
 		this.nickname = nickname;
 		this.score = score;
@@ -171,6 +161,11 @@ public class Winner {
 		this.right = right;
 	}
 	
+	/**
+	* Returns the winner data in a string form.<br>
+	* <b>post:</b> Has returned the winner data. 
+	* @return a message containing the winner info.
+	*/
 	public String showData() {
 		String msg = "";
 	    msg += "=================================================\n";

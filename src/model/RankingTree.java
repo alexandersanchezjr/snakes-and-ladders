@@ -25,6 +25,19 @@ public class RankingTree {
 		this.root = root;
 	}
 	
+	/**
+	* Add a player which won the game.<br>
+	* <b>pre:</b> The player score, columns, rows, snakes, ladders and number of players should not be zero. Also, symbols is not empty. <br>
+	* <b>post:</b> Has added the player to the ranking binary tree. 
+	* @param nickname The player nickname . nickname != "".
+	* @param score The player score. score != 0.
+	* @param columns The game columns.
+	* @param rows The game rows.
+	* @param snakes The game snakes. 
+	* @param ladders The game ladders
+	* @param players The number of players of the game.
+	* @param symbols The symbols used in the game.
+	*/
 	public void addWinner(String nickname, int score, int columns, int rows, int snakes, int ladders, int players, String symbols) {
 		Winner w = new Winner(nickname, score, columns, rows, snakes, ladders, players, symbols);
 		if(root == null) {

@@ -10,10 +10,7 @@ public class Player {
 	private Player left;
 	
 	
-	/**
-	 * @param symbol
-	 * @param cont
-	 */
+
 	public Player(char symbol) {
 		this.setSymbol(symbol);
 		cont = 0;
@@ -50,7 +47,7 @@ public class Player {
 	}
 
 	/**
-	 * @param score the score to set
+	 * @param size the size to operate
 	 */
 	public void setScore(int size) {
 		score = cont*size;
