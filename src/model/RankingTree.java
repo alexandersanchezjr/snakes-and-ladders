@@ -38,8 +38,8 @@ public class RankingTree {
 	* @param players The number of players of the game.
 	* @param symbols The symbols used in the game.
 	*/
-	public void addWinner(String nickname, int score, int columns, int rows, int snakes, int ladders, int players, String symbols) {
-		Winner w = new Winner(nickname, score, columns, rows, snakes, ladders, players, symbols);
+	public void addWinner(String nickname, int score, int columns, int rows, int snakes, int ladders, int players, String symbols, int moves) {
+		Winner w = new Winner(nickname, score, columns, rows, snakes, ladders, players, symbols, moves);
 		if(root == null) {
 			root = w;
 		}else {

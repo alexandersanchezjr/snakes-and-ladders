@@ -4,6 +4,7 @@ public class Winner {
 	
 	private String nickname;
 	private int score;
+	private int moves;
 	private int columns;
 	private int rows;
 	private int snakes;
@@ -15,7 +16,7 @@ public class Winner {
 	private Winner left;
 	private Winner right;
 	
-	public Winner(String nickname, int score, int columns, int rows, int snakes, int ladders, int players, String symbols) {
+	public Winner(String nickname, int score, int columns, int rows, int snakes, int ladders, int players, String symbols, int moves) {
 		this.nickname = nickname;
 		this.score = score;
 		this.columns = columns;
@@ -24,6 +25,7 @@ public class Winner {
 		this.ladders = ladders;
 		this.players = players;
 		this.symbols = symbols;
+		this.moves = moves;
 		parent = null;
 		left = null;
 		right = null;
@@ -170,7 +172,8 @@ public class Winner {
 		String msg = "";
 	    msg += "=================================================\n";
 	    msg += "\nNombre: " + nickname + 
-	    		"\nPuntaje: " +  score + 
+	    		"\nPuntaje: " +  score +
+	    		"\nMovimientos: " + moves +
 	    		"\nDimensión tablero: " + columns + "x" + rows + 
 	    		"\nSerpientes: " + snakes + 
 	    		"\nEscaleras: " + ladders + 

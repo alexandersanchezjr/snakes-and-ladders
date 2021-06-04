@@ -84,9 +84,10 @@ public class Menu {
 			System.out.println(game.gameToString());
 			if (game.hasWinner()) {
 				System.out.println("El jugador " + game.getTurn().getSymbol() + " ha ganado el juego, con " + game.getTurn().getCont() + " movimientos");
+				int m = game.getTurn().getCont();
 				System.out.print("Nickname: ");
 				String nickname = br.readLine();
-				addWinner(nickname);		
+				addWinner(nickname, m);		
 			}else {
 				System.out.println("Esperando salto de linea para continuar...");
 				playGame(br.readLine());
@@ -113,6 +114,7 @@ public class Menu {
 		System.out.println(game.gameToString());
 		if (game.hasWinner()) {
 			System.out.println("El jugador " + game.getTurn().getSymbol() + " ha ganado el juego, con " + game.getTurn().getCont() + " movimientos");
+			int m = game.getTurn().getCont();
 			System.out.print("Nickname: ");
 			String nickname = "";
 			try {
@@ -125,16 +127,16 @@ public class Menu {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			addWinner(nickname);	
+			addWinner(nickname, m);	
 		}else {
 			Thread.sleep(2000);
 			startSimulation();
 		}
 	}
 	
-	public void addWinner (String nickname) {
+	public void addWinner (String nickname, int moves) {
 		int numberOfPlayers = game.getSymbols().length();
-		rt.addWinner(nickname, game.getTurn().getScore(), game.getColumns(), game.getRows(), game.getSnakes(), game.getLadders(), numberOfPlayers, game.getSymbols());
+		rt.addWinner(nickname, game.getTurn().getScore(), game.getColumns(), game.getRows(), game.getSnakes(), game.getLadders(), numberOfPlayers, game.getSymbols(), moves);
 	}
 	
 	public void showRankingTree(Winner current) {
